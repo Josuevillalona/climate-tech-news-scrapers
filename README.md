@@ -1,6 +1,6 @@
 # Multi-Source Climate & Tech News Scraper
 
-This project contains daily scrapers for climate and technology news from multiple sources.
+This project contains automated daily scrapers for climate and technology news from multiple sources using GitHub Actions.
 
 ## Sources
 - **TechCrunch** - Startup news and funding announcements
@@ -17,7 +17,7 @@ playwright install chromium  # Required for Axios scraper
 ```
 
 ### Environment Variables
-Create a `.env` file with:
+For local development, create a `.env` file with:
 ```
 SUPABASE_URL="your_supabase_url"
 SUPABASE_KEY="your_supabase_anon_key"
@@ -25,7 +25,7 @@ SUPABASE_KEY="your_supabase_anon_key"
 
 ## Usage
 
-### Run Individual Scrapers
+### Run Individual Scrapers Locally
 ```bash
 python scrape_techcrunch_daily.py
 python scrape_climateinsider_daily.py
@@ -33,12 +33,20 @@ python scrape_ctvc_daily.py
 python scrape_axios_daily.py
 ```
 
-## Deployment
+## Automated Deployment
 
-This project is designed to run as cron jobs on Render with the following schedule:
-- TechCrunch: Daily at 00:05
-- Climate Insider: Daily at 00:10
-- CTVC: Daily at 00:15
-- Axios: Daily at 00:20
+This project runs automatically using **GitHub Actions** (completely FREE!) with the following schedule:
+- **TechCrunch**: Daily at 00:05 UTC
+- **Climate Insider**: Daily at 00:10 UTC  
+- **CTVC**: Daily at 00:15 UTC
+- **Axios**: Daily at 00:20 UTC
+
+### GitHub Secrets Required
+Add these secrets in your GitHub repository settings:
+- `SUPABASE_URL` - Your Supabase project URL
+- `SUPABASE_KEY` - Your Supabase anon key
+
+### Manual Trigger
+You can manually trigger any workflow from the GitHub Actions tab for testing.
 
 All scrapers save articles to the same Supabase database with `status='NEW'` for processing.
