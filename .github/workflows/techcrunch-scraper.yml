@@ -28,4 +28,15 @@ jobs:
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      run: python scrape_techcrunch_daily.py
+      run: |
+        echo "🚀 Starting TechCrunch scraper at $(date)"
+        python scrape_techcrunch_daily.py
+        echo "✅ TechCrunch scraper completed at $(date)"
+        
+    - name: Log completion
+      if: success()
+      run: echo "✅ TechCrunch scraper ran successfully"
+      
+    - name: Log failure
+      if: failure()
+      run: echo "❌ TechCrunch scraper failed"
