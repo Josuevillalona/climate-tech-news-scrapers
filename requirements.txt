@@ -3,3 +3,9 @@ beautifulsoup4
 supabase
 python-dotenv
 playwright
+transformers
+torch
+tensorflow
+transformers
+torch
+datasets
