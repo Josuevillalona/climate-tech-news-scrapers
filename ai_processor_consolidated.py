@@ -135,14 +135,24 @@ class ConsolidatedAIProcessor:
             extracted_data = self._extract_with_source_awareness(raw_content, deal, source_type)
             print(f"   📊 Extracted: {list(extracted_data.keys())}")
             
-            # Step 3: Update the deal with extracted information
+            # Step 3: Post-extraction climate tech validation
+            if not self._validate_climate_tech_relevance(extracted_data, raw_content, source_type):
+                print("   ❌ Post-extraction validation: Not climate tech - marking as irrelevant")
+                self._update_deal_status(deal_id, 'IRRELEVANT')
+                return True
+            
+            # Step 4: Update the deal with extracted information
             self._update_deal_with_ai_data(deal_id, extracted_data)
             
-            # Step 4: Create enhanced relationships (investors, etc.)
+            # Step 4.5: Update company name if extracted from news (NEW)
+            if extracted_data.get('company_name') and source_type == 'news':
+                self._update_company_name(deal, extracted_data['company_name'])
+            
+            # Step 5: Create enhanced relationships (investors, etc.)
             self._create_enhanced_relationships(deal_id, extracted_data)
             
-            # Step 5: Update status
-            self._update_deal_status(deal_id, 'PROCESSED')
+            # Step 6: Update status
+            self._update_deal_status(deal_id, 'PROCESSED_AI')
             print(f"   ✅ Successfully processed {source_type} deal")
             
             return True
@@ -165,10 +175,81 @@ class ConsolidatedAIProcessor:
             return True
             
         elif source_type == 'news':
-            # Traditional news needs funding indicators
+            # Traditional news needs BOTH funding indicators AND climate relevance
             funding_keywords = ['funding', 'raised', 'investment', 'round', 'series', 'seed', 'venture']
-            return any(keyword in content.lower() for keyword in funding_keywords)
+            climate_keywords = ['climate', 'energy', 'renewable', 'carbon', 'emission', 'sustainable', 'green', 'cleantech', 'solar', 'wind', 'battery', 'electric', 'ev', 'clean tech', 'environmental']
             
+            has_funding = any(keyword in content.lower() for keyword in funding_keywords)
+            has_climate = any(keyword in content.lower() for keyword in climate_keywords)
+            
+            return has_funding and has_climate
+            
+        return True
+
+    def _validate_climate_tech_relevance(self, extracted_data: Dict[str, Any], content: str, source_type: str) -> bool:
+        """Post-extraction validation to ensure the deal is actually climate tech related."""
+        
+        # For government research and VC portfolio, we trust the initial filtering
+        if source_type in ['government_research', 'vc_portfolio']:
+            return True
+        
+        # For news articles, we need stricter validation after extraction
+        if source_type == 'news':
+            # Check if we extracted any climate-related sectors
+            climate_sectors = extracted_data.get('climate_sectors', [])
+            if climate_sectors and len(climate_sectors) > 0:
+                # Filter out generic/weak climate indicators
+                strong_climate_sectors = [s for s in climate_sectors if s.lower() not in ['general', 'other', 'unknown', 'tech']]
+                if strong_climate_sectors:
+                    return True
+            
+            # Check if the company description indicates climate focus
+            company_description = extracted_data.get('company_description', '')
+            if company_description:
+                climate_indicators = [
+                    'renewable energy', 'solar power', 'wind energy', 'battery technology',
+                    'electric vehicle', 'carbon capture', 'climate change', 'sustainability',
+                    'clean energy', 'green technology', 'environmental', 'emission reduction',
+                    'energy storage', 'smart grid', 'cleantech', 'decarbonization',
+                    'circular economy', 'waste reduction', 'energy efficiency'
+                ]
+                
+                description_lower = company_description.lower()
+                if any(indicator in description_lower for indicator in climate_indicators):
+                    return True
+            
+            # Additional check: Look for AI companies that are not climate-focused
+            # This specifically catches cases like Neuralk-AI
+            has_ai_focus = extracted_data.get('has_ai_focus', False)
+            if has_ai_focus:
+                # If it's AI-focused, make sure it's climate-related AI
+                non_climate_ai_indicators = [
+                    'marketing', 'advertising', 'customer data', 'sales', 'crm',
+                    'social media', 'content creation', 'game', 'gaming', 'entertainment',
+                    'fintech', 'financial services', 'banking', 'insurance', 'real estate',
+                    'healthcare', 'medical', 'pharmaceutical', 'biotech', 'education',
+                    'e-commerce', 'retail', 'fashion', 'food delivery', 'restaurant'
+                ]
+                
+                content_lower = content.lower()
+                company_desc_lower = company_description.lower() if company_description else ''
+                
+                # If we find non-climate AI indicators and no strong climate indicators
+                if any(indicator in content_lower or indicator in company_desc_lower for indicator in non_climate_ai_indicators):
+                    # Double-check for climate relevance
+                    strong_climate_keywords = [
+                        'renewable energy', 'solar', 'wind', 'battery', 'electric vehicle',
+                        'carbon capture', 'emission', 'climate', 'clean energy', 'grid',
+                        'energy storage', 'sustainability', 'environmental monitoring'
+                    ]
+                    
+                    if not any(keyword in content_lower for keyword in strong_climate_keywords):
+                        return False
+            
+            # If we reach here and no amount was extracted (no funding details), likely not relevant
+            if not extracted_data.get('amount_usd') and not extracted_data.get('original_amount'):
+                return False
+        
         return True
 
     def _extract_with_source_awareness(self, content: str, deal: Dict, source_type: str) -> Dict[str, Any]:
@@ -361,6 +442,23 @@ class ConsolidatedAIProcessor:
             if direct_date:
                 extracted['announcement_date'] = direct_date
                 print(f"   ✅ Found date via content scan: {direct_date}")
+        
+        # Extract company name (NEW - Extract clean company name from article)
+        company_questions = [
+            "What is the name of the company that raised funding?",
+            "Which company is this article about?",
+            "What is the startup's name?",
+            "What company received the investment?"
+        ]
+        
+        for question in company_questions:
+            try:
+                result = qa_pipeline(question=question, context=content)
+                if result['score'] > 0.5:
+                    extracted['company_name'] = self._clean_company_name(result['answer'])
+                    break
+            except:
+                continue
         
         # Extract funding amount
         amount_questions = [
@@ -711,6 +809,27 @@ class ConsolidatedAIProcessor:
         except Exception as e:
             print(f"   ⚠️  Failed to update deal: {e}")
 
+    def _update_company_name(self, deal: Dict, clean_company_name: str):
+        """Update company name with clean extracted name."""
+        
+        company_id = deal.get('company_id')
+        if not company_id:
+            return
+            
+        current_name = deal.get('companies', {}).get('name', '')
+        
+        # Only update if the current name looks like an article title
+        if len(current_name) > 50 or any(word in current_name.lower() for word in ['raises', 'funding', 'million', 'series', '$']):
+            try:
+                self.supabase.table('companies').update({
+                    'name': clean_company_name,
+                    'updated_at': datetime.now().isoformat()
+                }).eq('id', company_id).execute()
+                
+                print(f"   🏢 Updated company name: '{current_name}' → '{clean_company_name}'")
+            except Exception as e:
+                print(f"   ⚠️  Failed to update company name: {e}")
+
     def _create_enhanced_relationships(self, deal_id: str, extracted_data: Dict):
         """Create investor relationships and other enhanced data."""
         
@@ -742,6 +861,49 @@ class ConsolidatedAIProcessor:
                     
             except Exception as e:
                 print(f"   ⚠️  Failed to create relationship for {investor_name}: {e}")
+
+    def _clean_company_name(self, raw_name: str) -> str:
+        """Clean and extract company name from AI response."""
+        if not raw_name:
+            return "Unknown Company"
+        
+        # Remove common prefixes/suffixes that indicate funding news
+        clean_name = raw_name.strip()
+        
+        # Remove funding-related phrases
+        funding_phrases = [
+            r'\s+raises?\s+\$.*',
+            r'\s+secured?\s+\$.*', 
+            r'\s+announced?\s+\$.*',
+            r'\s+gets?\s+\$.*',
+            r'\s+closes?\s+\$.*',
+            r'\s+funding.*',
+            r'\s+investment.*',
+            r'\s+round.*',
+            r'\s+series\s+[a-z].*',
+            r'.*startup\s+',
+            r'.*company\s+',
+            r"'s\s+.*",  # Remove possessive and everything after
+        ]
+        
+        for phrase in funding_phrases:
+            clean_name = re.sub(phrase, '', clean_name, flags=re.IGNORECASE)
+        
+        # Extract just the company name (first few words, capitalized)
+        words = clean_name.split()
+        if len(words) > 0:
+            # Take first 1-3 words that look like a company name
+            company_words = []
+            for word in words[:3]:
+                # Stop at common words that indicate end of company name
+                if word.lower() in ['is', 'has', 'will', 'the', 'a', 'an', 'and', 'or']:
+                    break
+                company_words.append(word.strip('.,!?'))
+            
+            if company_words:
+                return ' '.join(company_words)
+        
+        return "Unknown Company"
 
 # MAIN EXECUTION
 def main():

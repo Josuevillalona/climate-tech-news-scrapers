@@ -24,14 +24,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Run AI article processor (Consolidated)
+    - name: Run AI article processor (Enhanced Consolidated)
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
-        echo "🤖 Starting AI article processor (Consolidated) at $(date)"
+        echo "🤖 Starting Enhanced AI article processor (Consolidated) at $(date)"
+        echo "✨ Features: Enhanced climate filtering, company name extraction, post-validation"
         python ai_processor_consolidated.py
-        echo "✅ AI processing consolidated completed at $(date)"
+        echo "✅ Enhanced AI processing consolidated completed at $(date)"
         
     - name: Log completion
       if: success()
