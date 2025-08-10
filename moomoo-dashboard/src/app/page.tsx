@@ -26,6 +26,7 @@ function DashboardContent() {
   const [activeView, setActiveView] = useState<ActiveView>('deals');
 
   const getStageVariant = (stage: string): "error" | "warning" | "success" | "secondary" | "outline" | "climate" | "default" => {
+    if (!stage) return 'outline';
     switch (stage.toLowerCase()) {
       case 'seed':
       case 'pre-seed':
@@ -41,7 +42,8 @@ function DashboardContent() {
   };
 
   const getSectorVariant = (sectors: string[]): "error" | "warning" | "success" | "secondary" | "outline" | "climate" | "default" => {
-    if (sectors.some(s => s.includes('AI') || s.includes('Software'))) {
+    if (!sectors || sectors.length === 0) return 'climate';
+    if (sectors.some(s => s && (s.includes('AI') || s.includes('Software')))) {
       return 'climate';
     }
     return 'climate';
@@ -50,12 +52,12 @@ function DashboardContent() {
   return (
     <div className="min-h-screen bg-[#F3F3F3] text-[#2D2D2D] flex">
       {/* Left Sidebar */}
-      <div className="w-64 bg-gradient-to-b from-[#4285F4] to-[#3367D6] text-white flex flex-col shadow-2xl">
+      <div className="w-64 bg-[#63b5e4] text-white flex flex-col shadow-2xl">
         {/* Logo */}
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-[#4285F4] font-bold text-lg">M</span>
+              <span className="text-[#63b5e4] font-bold text-lg">M</span>
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">MooMoo</h1>
