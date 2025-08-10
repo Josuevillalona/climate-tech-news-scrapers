@@ -1,0 +1,46 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100..900&display=swap');
+
+:root {
+  --background: #ffffff;
+  --foreground: #2D2D2D;
+  
+  /* Moo Climate Brand Colors */
+  --primary-yellow: #F7D774;
+  --deep-green: #2E5E4E;
+  --charcoal-gray: #2D2D2D;
+  --light-neutral: #F3F3F3;
+  --sky-blue: #AEE1F6;
+  
+  /* UI Variables */
+  --border: #e5e7eb;
+  --card: #ffffff;
+  --card-foreground: #2D2D2D;
+  --muted: #F3F3F3;
+  --muted-foreground: #6b7280;
+  --accent: #F7D774;
+  --accent-foreground: #2D2D2D;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --radius: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
