@@ -1,0 +1,96 @@
+name: Layer 3C Strategic Intelligence Engine
+
+on:
+  schedule:
+    # Run strategic intelligence at 3:30 UTC daily (after Layer 3B optimization)
+    - cron: '30 3 * * *'
+  workflow_dispatch:
+    inputs:
+      analysis_days:
+        description: 'Number of days to analyze (default: 90)'
+        required: false
+        default: '90'
+
+jobs:
+  strategic-intelligence:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run Layer 3C Strategic Intelligence
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        ANALYSIS_DAYS: ${{ github.event.inputs.analysis_days || '90' }}
+      run: |
+        echo "🧠 Starting Layer 3C Strategic Intelligence Engine..."
+        python -c "
+        from layer3c_strategic_intelligence import StrategicIntelligenceEngine
+        import os
+        
+        # Initialize engine
+        engine = StrategicIntelligenceEngine()
+        
+        # Generate comprehensive strategic intelligence report
+        print('📊 Generating executive-level strategic intelligence report...')
+        report = engine.generate_strategic_intelligence_report(
+            analysis_days=int(os.getenv('ANALYSIS_DAYS', '90'))
+        )
+        
+        print(f'✅ Strategic Intelligence Report Generated:')
+        print(f'   📈 Overall Confidence: {report[\"metadata\"][\"overall_confidence\"]:.1%}')
+        print(f'   📅 Analysis Period: {report[\"metadata\"][\"analysis_period\"]}')
+        print(f'   📋 Report Sections: {report[\"metadata\"][\"sections_completed\"]}/8')
+        
+        # Executive Summary
+        if 'executive_summary' in report:
+            summary = report['executive_summary']
+            print(f'   🎯 Key Discovery: {summary[\"key_metrics\"][\"total_deals\"]} deals analyzed')
+            print(f'   🏛️  Government Intel: {summary[\"key_metrics\"][\"govt_deals\"]} discoveries')
+            print(f'   💼 VC Activities: {summary[\"key_metrics\"][\"vc_deals\"]} tracked')
+        
+        # Market Intelligence
+        if 'market_intelligence' in report and report['market_intelligence']:
+            print(f'   🌍 Market Intelligence: {len(report[\"market_intelligence\"])} sectors analyzed')
+            for sector, intel in list(report['market_intelligence'].items())[:3]:
+                print(f'     • {sector}: {intel.competitive_landscape}')
+        
+        # Strategic Insights
+        if 'strategic_insights' in report and report['strategic_insights']:
+            insights = report['strategic_insights']
+            print(f'   💡 Strategic Insights: {len(insights)} insights generated')
+            for insight in insights[:2]:
+                print(f'     • {insight.title} (Priority: {insight.priority_level})')
+        
+        print('🎉 Layer 3C Strategic Intelligence Engine: Mission Complete!')
+        "
+    
+    - name: Commit and push results
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Create strategic intelligence log
+        echo "Layer 3C Strategic Intelligence - $(date)" >> strategic_intelligence.log
+        echo "Executive-level analysis completed at $(date)" >> strategic_intelligence.log
+        echo "---" >> strategic_intelligence.log
+        
+        if [[ -n $(git status --porcelain) ]]; then
+          git add .
+          git commit -m "🧠 Layer 3C Strategic Intelligence: Executive analysis $(date)"
+          git push
+        else
+          echo "No changes to commit"
+        fi
