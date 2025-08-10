@@ -1,13 +1,13 @@
-name: AI Article Processor
+name: Layer 3B Investment Optimizer
 
 on:
   schedule:
-    # Runs at 01:00 UTC every day (after all scrapers complete)
-    - cron: '0 1 * * *'
+    # Runs at 03:00 UTC daily (after Layer 3A analytics complete)
+    - cron: '0 3 * * *'
   workflow_dispatch: # Allows manual triggering
 
 jobs:
-  process-articles:
+  layer3b-optimizer:
     runs-on: ubuntu-latest
     
     steps:
@@ -24,19 +24,19 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Run AI article processor (Consolidated)
+    - name: Run Layer 3B Investment Strategy Optimization
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: |
-        echo "🤖 Starting AI article processor (Consolidated) at $(date)"
-        python ai_processor_consolidated.py
-        echo "✅ AI processing consolidated completed at $(date)"
+        echo "💼 Starting Layer 3B Investment Strategy Optimization at $(date)"
+        python layer3b_investment_optimizer.py
+        echo "✅ Investment strategy optimization completed at $(date)"
         
     - name: Log completion
       if: success()
-      run: echo "✅ AI processor ran successfully"
+      run: echo "✅ Layer 3B optimization completed successfully"
       
     - name: Log failure
       if: failure()
-      run: echo "❌ AI processor failed"
+      run: echo "❌ Layer 3B optimization failed"

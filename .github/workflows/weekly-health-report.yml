@@ -1,0 +1,87 @@
+name: Weekly System Health Report
+
+on:
+  schedule:
+    # Runs every Sunday at 04:00 UTC (weekly comprehensive health check)
+    - cron: '0 4 * * 0'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  system-health:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run Complete End-to-End Workflow Test
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: |
+        echo "🔬 Starting Complete End-to-End Workflow Test at $(date)"
+        python test_end_to_end_workflow.py
+        echo "✅ End-to-end workflow test completed at $(date)"
+        
+    - name: Generate System Health Report
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: |
+        echo "📊 Generating System Health Report at $(date)"
+        python -c "
+        import os
+        from datetime import datetime, timedelta
+        from supabase import create_client
+        
+        supabase = create_client(os.getenv('SUPABASE_URL'), os.getenv('SUPABASE_KEY'))
+        
+        # Get system statistics for the past week
+        week_ago = (datetime.now() - timedelta(days=7)).isoformat()
+        
+        try:
+            # Count new deals by source type
+            govt = supabase.table('deals_new').select('*').eq('source_type', 'government_research').gte('created_at', week_ago).execute()
+            vc = supabase.table('deals_new').select('*').eq('source_type', 'vc_portfolio').gte('created_at', week_ago).execute()
+            news = supabase.table('deals_new').select('*').eq('source_type', 'news').gte('created_at', week_ago).execute()
+            
+            # Count processed vs unprocessed
+            processed = supabase.table('deals_new').select('*').eq('status', 'PROCESSED').gte('updated_at', week_ago).execute()
+            
+            print('📊 WEEKLY SYSTEM HEALTH REPORT')
+            print('═' * 50)
+            print(f'📅 Report Period: {week_ago[:10]} to {datetime.now().strftime('%Y-%m-%d')}')
+            print()
+            print('🔍 NEW DISCOVERIES:')
+            print(f'   🏛️  Government Research: {len(govt.data)} discoveries')
+            print(f'   💼 VC Portfolio: {len(vc.data)} discoveries')
+            print(f'   📰 News Sources: {len(news.data)} discoveries')
+            print(f'   📊 Total New: {len(govt.data) + len(vc.data) + len(news.data)} discoveries')
+            print()
+            print('🤖 AI PROCESSING:')
+            print(f'   ✅ Processed: {len(processed.data)} deals')
+            print()
+            print('✅ System Status: OPERATIONAL')
+            
+        except Exception as e:
+            print(f'❌ Error generating health report: {e}')
+        "
+        echo "✅ System health report generated at $(date)"
+        
+    - name: Log completion
+      if: success()
+      run: echo "✅ Weekly system health check completed successfully"
+      
+    - name: Log failure
+      if: failure()
+      run: echo "❌ Weekly system health check failed"

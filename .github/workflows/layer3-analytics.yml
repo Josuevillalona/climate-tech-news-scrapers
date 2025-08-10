@@ -1,0 +1,60 @@
+name: Layer 3 Analytics Engine
+
+on:
+  schedule:
+    # Runs at 02:00 UTC daily (after AI processing completes)
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  layer3-analytics:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run Layer 3A Discovery Pattern Analysis
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: |
+        echo "🔍 Starting Layer 3A Discovery Pattern Analysis at $(date)"
+        python layer3_discovery_patterns.py
+        echo "✅ Discovery pattern analysis completed at $(date)"
+        
+    - name: Run Layer 3A Investment Timing Prediction
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: |
+        echo "⏰ Starting Layer 3A Investment Timing Analysis at $(date)"
+        python layer3_investment_timing.py
+        echo "✅ Investment timing analysis completed at $(date)"
+        
+    - name: Run Layer 3A Market Trend Forecasting
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: |
+        echo "📈 Starting Layer 3A Market Trend Forecasting at $(date)"
+        python layer3_market_trends.py
+        echo "✅ Market trend forecasting completed at $(date)"
+        
+    - name: Log completion
+      if: success()
+      run: echo "✅ Layer 3A analytics completed successfully"
+      
+    - name: Log failure
+      if: failure()
+      run: echo "❌ Layer 3A analytics failed"
