@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { fetchDeals, fetchDashboardStats } from '@/lib/api';
-import type { FormattedDeal } from '@/lib/supabase';
+import { fetchDeals, fetchDashboardStats, type UIFormattedDeal } from '@/lib/api';
 import type { FilterState } from '@/contexts/FilterContext';
 
 export function useDeals(filters?: FilterState) {
-  const [deals, setDeals] = useState<FormattedDeal[]>([]);
+  const [deals, setDeals] = useState<UIFormattedDeal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
