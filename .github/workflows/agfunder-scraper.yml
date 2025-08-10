@@ -1,0 +1,42 @@
+name: AgFunder News Daily Scraper
+
+on:
+  schedule:
+    # Runs at 00:25 UTC every day (after main 4 scrapers)
+    - cron: '25 0 * * *'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  scrape-agfunder:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run AgFunder News scraper (v2 - New Schema)
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: |
+        echo "🌱 Starting AgFunder News scraper v2 (New Schema) at $(date)"
+        python scrape_agfundernews_daily_v2.py
+        echo "✅ AgFunder News scraper v2 completed at $(date)"
+        
+    - name: Log completion
+      if: success()
+      run: echo "✅ AgFunder News scraper ran successfully"
+      
+    - name: Log failure
+      if: failure()
+      run: echo "❌ AgFunder News scraper failed"

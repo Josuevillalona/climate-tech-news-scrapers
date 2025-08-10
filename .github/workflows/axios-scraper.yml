@@ -1,0 +1,37 @@
+name: Axios Daily Scraper
+
+on:
+  schedule:
+    # Runs at 00:20 UTC every day
+    - cron: '20 0 * * *'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  scrape-axios:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Install Playwright browsers
+      run: playwright install chromium
+      
+    - name: Run Axios scraper (v2 - New Schema)
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: |
+        echo "🚀 Starting Axios scraper v2 (New Schema) at $(date)"
+        python scrape_axios_daily_v2.py
+        echo "✅ Axios scraper v2 completed at $(date)"

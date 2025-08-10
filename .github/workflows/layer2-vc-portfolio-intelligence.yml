@@ -1,0 +1,46 @@
+name: Layer 2 VC Portfolio Intelligence
+
+on:
+  schedule:
+    # Runs weekly on Sundays at 22:00 UTC
+    # VC portfolios don't change daily, weekly is sufficient
+    - cron: '0 22 * * 0'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  layer2-vc-portfolios:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Install Playwright browsers
+      run: playwright install chromium
+        
+    - name: Run VC Portfolio Intelligence
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: |
+        echo "💼 Starting VC Portfolio Intelligence at $(date)"
+        python scrape_vc_portfolios.py
+        echo "✅ VC portfolio scan completed at $(date)"
+        
+    - name: Log completion
+      if: success()
+      run: echo "✅ VC portfolio intelligence ran successfully"
+      
+    - name: Log failure
+      if: failure()
+      run: echo "❌ VC portfolio intelligence failed"

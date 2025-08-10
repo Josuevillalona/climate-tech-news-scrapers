@@ -1,0 +1,43 @@
+name: Layer 2 Government Intelligence
+
+on:
+  schedule:
+    # Runs at 23:30 UTC daily (before news scrapers) 
+    # This gives early warning before mainstream news
+    - cron: '30 23 * * *'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  layer2-government:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run Layer 2 Government Intelligence
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: |
+        echo "🏛️ Starting Layer 2 Government Intelligence at $(date)"
+        python layer2_orchestrator.py
+        echo "✅ Government intelligence collection completed at $(date)"
+        
+    - name: Log completion
+      if: success()
+      run: echo "✅ Layer 2 government intelligence ran successfully"
+      
+    - name: Log failure
+      if: failure()
+      run: echo "❌ Layer 2 government intelligence failed"
