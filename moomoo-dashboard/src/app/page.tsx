@@ -10,8 +10,8 @@ import { useDeals, useDashboardStats } from "@/hooks/useData";
 import { formatLargeNumber } from "@/lib/utils";
 import { FilterProvider, useFilters } from "@/contexts/FilterContext";
 import FilterPanel from "@/components/FilterPanel";
-// import AlertsPanel from "@/components/AlertsPanel"; // Temporarily disabled
-// import CreateAlertModal from "@/components/CreateAlertModal"; // Temporarily disabled
+import AlertsPanel from "@/components/AlertsPanel";
+import CreateAlertModal from "@/components/CreateAlertModal";
 import NewsIntelligenceFeed from "@/components/NewsIntelligenceFeed";
 import CompanySignalsWidget from "@/components/CompanySignalsWidget";
 import ReportGenerationPanel from "@/components/ReportGenerationPanel";
@@ -207,20 +207,7 @@ function DashboardContent() {
               {/* Filter and Alert Panels */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <FilterPanel onCreateAlert={() => setShowCreateAlert(true)} />
-                {/* <AlertsPanel /> - Temporarily disabled due to context issue */}
-                <Card className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border-0">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-lg font-bold text-[#2D2D2D] flex items-center">
-                      <Bell className="h-5 w-5 mr-2 text-orange-600" />
-                      Alert Management
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 text-sm">
-                      Alert system temporarily unavailable. Working on fixing context provider.
-                    </p>
-                  </CardContent>
-                </Card>
+                <AlertsPanel />
               </div>
 
               {/* Stats Overview */}
@@ -490,11 +477,11 @@ function DashboardContent() {
       )}
         </main>
 
-        {/* Create Alert Modal - Temporarily disabled due to context issue */}
-        {/* <CreateAlertModal 
+        {/* Create Alert Modal */}
+        <CreateAlertModal 
           isOpen={showCreateAlert} 
           onClose={() => setShowCreateAlert(false)} 
-        /> */}
+        />
       </div>
     </div>
   );

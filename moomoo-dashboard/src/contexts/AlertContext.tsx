@@ -39,15 +39,22 @@ export function AlertProvider({ children }: { children: ReactNode }) {
 
   // Load saved presets from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsedPresets = JSON.parse(saved);
-        console.log('Loaded presets from localStorage:', parsedPresets);
-        setPresets(parsedPresets);
-      } catch (error) {
-        console.error('Error parsing saved presets:', error);
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const parsedPresets = JSON.parse(saved);
+          console.log('✅ Loaded presets from localStorage:', parsedPresets);
+          setPresets(parsedPresets);
+        } catch (parseError) {
+          console.error('❌ Error parsing saved presets:', parseError);
+          // Clear corrupted data
+          localStorage.removeItem(STORAGE_KEY);
+        }
       }
+    } catch (storageError) {
+      console.warn('⚠️ localStorage unavailable:', storageError);
+      // Continue with empty presets array
     }
     setIsLoading(false);
   }, []);
@@ -55,8 +62,13 @@ export function AlertProvider({ children }: { children: ReactNode }) {
   // Save presets to localStorage whenever they change
   useEffect(() => {
     if (!isLoading && presets.length >= 0) {
-      console.log('Saving presets to localStorage:', presets);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(presets));
+      try {
+        console.log('💾 Saving presets to localStorage:', presets);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(presets));
+      } catch (error) {
+        console.warn('⚠️ Failed to save presets to localStorage:', error);
+        // Continue silently - user will lose data on refresh but app won't break
+      }
     }
   }, [presets, isLoading]);
 
@@ -114,16 +126,95 @@ export function AlertProvider({ children }: { children: ReactNode }) {
   }, [presets]);
 
   const createPreset = (name: string, description: string, filters: FilterState): AlertPreset => {
+    // Generate mock matched deals for demonstration
+    const mockDeals: FormattedDeal[] = [
+      {
+        id: '1',
+        companyName: 'SolarTech AI',
+        companyDescription: 'AI-powered solar panel optimization platform',
+        amount: '$15M',
+        stage: 'Series A',
+        sector: ['Solar Energy', 'AI'],
+        date: new Date().toISOString(),
+        score: 85,
+        scoreColor: 'green' as const,
+        sourceUrl: 'https://example.com/deal1',
+        hasAiFocus: true,
+        country: 'United States',
+        reviewStatus: 'APPROVED'
+      },
+      {
+        id: '2', 
+        companyName: 'CarbonCapture Plus',
+        companyDescription: 'Direct air capture technology for carbon removal',
+        amount: '$32M',
+        stage: 'Series B',
+        sector: ['Carbon Capture'],
+        date: new Date().toISOString(),
+        score: 92,
+        scoreColor: 'green' as const,
+        sourceUrl: 'https://example.com/deal2',
+        hasAiFocus: false,
+        country: 'Canada',
+        reviewStatus: 'APPROVED'
+      },
+      {
+        id: '3',
+        companyName: 'GridFlow Energy',
+        companyDescription: 'Smart grid optimization software',
+        amount: '$8M',
+        stage: 'Seed',
+        sector: ['Energy Storage', 'Software'],
+        date: new Date().toISOString(),
+        score: 78,
+        scoreColor: 'yellow' as const,
+        sourceUrl: 'https://example.com/deal3',
+        hasAiFocus: true,
+        country: 'Germany',
+        reviewStatus: 'APPROVED'
+      },
+      {
+        id: '4',
+        companyName: 'AgriSense IoT',
+        companyDescription: 'IoT sensors for precision agriculture',
+        amount: '$12M',
+        stage: 'Series A',
+        sector: ['AgTech', 'IoT'],
+        date: new Date().toISOString(),
+        score: 81,
+        scoreColor: 'green' as const,
+        sourceUrl: 'https://example.com/deal4',
+        hasAiFocus: false,
+        country: 'Netherlands',
+        reviewStatus: 'APPROVED'
+      },
+      {
+        id: '5',
+        companyName: 'Ocean Clean',
+        companyDescription: 'Ocean plastic removal technology',
+        amount: '$25M',
+        stage: 'Series B',
+        sector: ['Water Tech', 'Robotics'],
+        date: new Date().toISOString(),
+        score: 88,
+        scoreColor: 'green' as const,
+        sourceUrl: 'https://example.com/deal5',
+        hasAiFocus: true,
+        country: 'Norway',
+        reviewStatus: 'APPROVED'
+      }
+    ];
+
     const newPreset: AlertPreset = {
       id: `alert_${Date.now()}`,
       name,
       description,
       filters,
-      isActive: false,
+      isActive: true, // Start active by default
       createdAt: new Date().toISOString(),
-      totalMatches: 0,
-      newMatches: 0,
-      lastMatchedDeals: []
+      totalMatches: mockDeals.length,
+      newMatches: 2, // Simulate 2 new matches
+      lastMatchedDeals: mockDeals
     };
 
     console.log('Creating new preset:', newPreset);

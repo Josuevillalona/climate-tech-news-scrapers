@@ -65,13 +65,18 @@ export default function CreateAlertModal({ isOpen, onClose }: { isOpen: boolean;
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="w-full max-w-md mx-auto my-8">
-        <Card className="bg-card border-border shadow-2xl">
-          <CardHeader>
+        <Card className="bg-[#2D2D2D] border-[#2E5E4E] shadow-2xl rounded-2xl">
+          <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-semibold text-white">
                 Create Investment Alert
               </CardTitle>
-              <Button variant="ghost" size="sm" onClick={onClose}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={onClose}
+                className="text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-full"
+              >
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -79,15 +84,15 @@ export default function CreateAlertModal({ isOpen, onClose }: { isOpen: boolean;
         
         <CardContent className="space-y-4">
           {/* Current Filter Summary */}
-          <div className="p-3 bg-muted/10 border border-border rounded-lg">
+          <div className="p-3 bg-[#2E5E4E]/20 border border-[#2E5E4E]/30 rounded-2xl">
             <div className="flex items-center space-x-2 mb-2">
-              <Zap className="h-4 w-4 text-primary-yellow" />
+              <Zap className="h-4 w-4 text-[#F7D774]" />
               <span className="text-sm font-medium text-white">Current Filters</span>
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="secondary" className="text-xs bg-[#F7D774] text-[#2D2D2D] rounded-full px-2 py-1">
                 {activeFilterCount} active
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-gray-300">
               {generateDescription()}
             </p>
           </div>
@@ -101,7 +106,7 @@ export default function CreateAlertModal({ isOpen, onClose }: { isOpen: boolean;
               placeholder="e.g., High-Score AI Seed Deals"
               value={alertName}
               onChange={(e) => setAlertName(e.target.value)}
-              className="w-full"
+              className="w-full bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 rounded-xl focus:border-[#F7D774] focus:ring-[#F7D774]"
               autoFocus
             />
           </div>
@@ -115,7 +120,7 @@ export default function CreateAlertModal({ isOpen, onClose }: { isOpen: boolean;
               placeholder={generateDescription()}
               value={alertDescription}
               onChange={(e) => setAlertDescription(e.target.value)}
-              className="w-full"
+              className="w-full bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 rounded-xl focus:border-[#F7D774] focus:ring-[#F7D774]"
             />
           </div>
 
@@ -124,27 +129,27 @@ export default function CreateAlertModal({ isOpen, onClose }: { isOpen: boolean;
             <span className="text-sm font-medium text-white">Alert Criteria:</span>
             <div className="flex flex-wrap gap-2">
               {filters.stages.map(stage => (
-                <Badge key={stage} variant="outline" className="text-xs">
+                <Badge key={stage} variant="outline" className="text-xs bg-[#2E5E4E]/30 text-white border-[#2E5E4E] rounded-full">
                   {stage}
                 </Badge>
               ))}
               {filters.hasAiFocus === true && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs bg-[#F7D774] text-[#2D2D2D] rounded-full">
                   AI Focus
                 </Badge>
               )}
               {filters.minScore > 0 && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs bg-[#F7D774] text-[#2D2D2D] rounded-full">
                   Score ≥{filters.minScore}
                 </Badge>
               )}
               {filters.sectors.slice(0, 3).map(sector => (
-                <Badge key={sector} variant="outline" className="text-xs">
+                <Badge key={sector} variant="outline" className="text-xs bg-[#2E5E4E]/30 text-white border-[#2E5E4E] rounded-full">
                   {sector}
                 </Badge>
               ))}
               {filters.sectors.length > 3 && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-xs bg-[#2E5E4E]/30 text-white border-[#2E5E4E] rounded-full">
                   +{filters.sectors.length - 3} more
                 </Badge>
               )}
@@ -153,17 +158,17 @@ export default function CreateAlertModal({ isOpen, onClose }: { isOpen: boolean;
 
           {/* Actions */}
           <div className="flex space-x-3 pt-4">
-            <Button variant="outline" onClick={onClose} className="flex-1">
+            <Button 
+              variant="outline" 
+              onClick={onClose} 
+              className="flex-1 bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:text-white rounded-xl"
+            >
               Cancel
             </Button>
             <Button 
               onClick={handleCreate}
               disabled={!alertName.trim()}
-              style={{
-                backgroundColor: '#F7D774',
-                color: '#000000'
-              }}
-              className="flex-1 hover:opacity-90 font-semibold"
+              className="flex-1 bg-[#F7D774] hover:bg-[#F7D774]/90 text-[#2D2D2D] font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="h-4 w-4 mr-2" />
               Create Alert
