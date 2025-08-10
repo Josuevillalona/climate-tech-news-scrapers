@@ -40,11 +40,11 @@ export default function AlertsPanel() {
 
   if (isLoading) {
     return (
-      <Card className="bg-card border-border">
+      <Card className="bg-white border-gray-200">
         <CardHeader>
           <div className="flex items-center space-x-2">
-            <Bell className="h-4 w-4 text-primary-yellow animate-pulse" />
-            <CardTitle className="text-sm font-semibold text-white">
+            <Bell className="h-4 w-4 text-orange-400 animate-pulse" />
+            <CardTitle className="text-sm font-semibold text-gray-900">
               Loading Alerts...
             </CardTitle>
           </div>
@@ -54,19 +54,26 @@ export default function AlertsPanel() {
   }
 
   return (
-    <Card className="bg-card border-border">
-      <CardHeader className="pb-3">
+    <Card className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border-0">
+      <CardHeader className="pb-6 bg-gradient-to-r from-[#F7D774]/20 to-[#F7D774]/10 rounded-t-2xl">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Bell className="h-4 w-4 text-primary-yellow" />
-            <CardTitle className="text-sm font-semibold text-white">
-              Investment Alerts
-            </CardTitle>
-            <Badge variant="secondary" className="text-xs">
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-orange-100 rounded-2xl shadow-sm">
+              <Bell className="h-5 w-5 text-orange-600" />
+            </div>
+            <div>
+              <CardTitle className="text-lg font-bold text-[#2D2D2D]">
+                Investment Alerts
+              </CardTitle>
+              <p className="text-sm text-gray-600 mt-1">Real-time deal monitoring</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-3">
+            <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 border-blue-200 rounded-full shadow-sm px-3 py-1 font-medium">
               {activePresets.length} active
             </Badge>
             {totalNewMatches > 0 && (
-              <Badge variant="default" className="text-xs bg-green-600">
+              <Badge variant="default" className="text-xs bg-green-600 text-white shadow-md rounded-full px-3 py-1 font-medium">
                 {totalNewMatches} new
               </Badge>
             )}
@@ -74,48 +81,48 @@ export default function AlertsPanel() {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-6 p-6">
         {/* Alert Presets */}
         {presets.map(preset => (
           <div
             key={preset.id}
-            className={`p-3 border rounded-lg transition-colors ${
+            className={`p-5 rounded-2xl transition-all duration-300 hover:shadow-md ${
               preset.isActive 
-                ? 'border-primary-yellow bg-primary-yellow/5' 
-                : 'border-border bg-muted/5'
+                ? 'bg-gradient-to-r from-[#F7D774]/20 to-[#F7D774]/10 border border-[#F7D774]/30 shadow-sm' 
+                : 'bg-white border border-gray-200 hover:bg-gray-50'
             }`}
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-1">
-                  <h4 className="text-sm font-medium text-white">
+                <div className="flex items-center space-x-3 mb-3">
+                  <h4 className="text-base font-semibold text-[#2D2D2D]">
                     {preset.name}
                   </h4>
                   {preset.isActive && (
-                    <Badge variant="outline" className="text-xs text-primary-yellow border-primary-yellow">
+                    <Badge variant="outline" className="text-xs text-orange-700 border-orange-400 bg-orange-100 rounded-full px-2 py-1 font-medium">
                       <Play className="h-3 w-3 mr-1" />
                       Active
                     </Badge>
                   )}
                   {preset.newMatches > 0 && (
-                    <Badge variant="default" className="text-xs bg-green-600">
+                    <Badge variant="default" className="text-xs bg-green-600 text-white shadow-sm rounded-full px-2 py-1 font-medium">
                       {preset.newMatches} new
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground mb-2">
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                   {preset.description}
                 </p>
                 
                 {/* Alert Stats */}
-                <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                <div className="flex items-center space-x-4 text-xs text-gray-600">
                   <span className="flex items-center">
                     <TrendingUp className="h-3 w-3 mr-1" />
                     {preset.totalMatches} total
                   </span>
                   <span>Last: {formatTimeAgo(preset.lastChecked)}</span>
                   {preset.lastTriggered && (
-                    <span className="text-green-400">
+                    <span className="text-green-600">
                       Triggered: {formatTimeAgo(preset.lastTriggered)}
                     </span>
                   )}
@@ -123,15 +130,15 @@ export default function AlertsPanel() {
 
                 {/* Recent Matches Preview */}
                 {preset.lastMatchedDeals && preset.lastMatchedDeals.length > 0 && (
-                  <div className="mt-2 p-2 bg-muted/10 rounded border">
-                    <div className="text-xs font-medium text-white mb-1">Recent Matches:</div>
+                  <div className="mt-2 p-2 bg-gray-100 rounded border">
+                    <div className="text-xs font-medium text-gray-900 mb-1">Recent Matches:</div>
                     {preset.lastMatchedDeals.slice(0, 2).map(deal => (
-                      <div key={deal.id} className="text-xs text-muted-foreground">
+                      <div key={deal.id} className="text-xs text-gray-600">
                         • {deal.companyName} - {deal.amount} ({deal.stage})
                       </div>
                     ))}
                     {preset.lastMatchedDeals.length > 2 && (
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-xs text-gray-600">
                         +{preset.lastMatchedDeals.length - 2} more deals
                       </div>
                     )}
@@ -146,8 +153,8 @@ export default function AlertsPanel() {
                   onClick={() => togglePreset(preset.id)}
                   className={`text-xs ${
                     preset.isActive 
-                      ? 'text-primary-yellow hover:text-white' 
-                      : 'text-muted-foreground hover:text-white'
+                      ? 'text-orange-600 hover:text-orange-700' 
+                      : 'text-gray-600 hover:text-gray-700'
                   }`}
                 >
                   {preset.isActive ? (
@@ -159,7 +166,7 @@ export default function AlertsPanel() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-xs text-muted-foreground hover:text-white"
+                  className="text-xs text-gray-600 hover:text-gray-700"
                 >
                   <Eye className="h-3 w-3" />
                 </Button>
@@ -167,7 +174,7 @@ export default function AlertsPanel() {
                   variant="ghost"
                   size="sm"
                   onClick={() => deletePreset(preset.id)}
-                  className="text-xs text-muted-foreground hover:text-red-400"
+                  className="text-xs text-gray-600 hover:text-red-500"
                 >
                   <Trash2 className="h-3 w-3" />
                 </Button>
@@ -177,7 +184,7 @@ export default function AlertsPanel() {
         ))}
 
         {presets.length === 0 && (
-          <div className="text-center py-6 text-muted-foreground">
+          <div className="text-center py-6 text-gray-600">
             <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No investment alerts configured</p>
             <p className="text-xs mt-1">
@@ -188,10 +195,10 @@ export default function AlertsPanel() {
 
         {/* Notification Permission Notice */}
         {'Notification' in window && Notification.permission === 'default' && activePresets.length > 0 && (
-          <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+          <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
             <div className="flex items-center space-x-2">
-              <Bell className="h-4 w-4 text-yellow-500" />
-              <span className="text-xs text-yellow-500">
+              <Bell className="h-4 w-4 text-yellow-600" />
+              <span className="text-xs text-yellow-600">
                 Enable notifications to receive real-time alerts
               </span>
             </div>
