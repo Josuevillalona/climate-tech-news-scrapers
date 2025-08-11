@@ -22,6 +22,8 @@ YOU MUST ACTUALLY EDIT FILES, NOT JUST READ THEM. When asked to implement or mod
 2. **Use create_file** to create new files  
 3. **Use run_in_terminal** to execute commands, install packages, run dev server
 4. **Always show actual code changes** rather than just explaining what should be done
+5. **Alaways review design-system.tsx** ensure you're thoroughly reviewing our design-system.tsx before any front end changes to ensure consistency in branding.
+6. **DON"T ever make mock DATA** unless specfically asked, never add mock data to tables or dahboards, tags, comments or anything. You should add something that tells the developer that it still needs to be updated wuth real data. 
 
 Example workflow:
 - Read existing code to understand structure

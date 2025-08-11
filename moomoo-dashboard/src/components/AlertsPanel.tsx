@@ -87,26 +87,26 @@ export default function AlertsPanel() {
   }
 
   return (
-    <Card className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border-0">
-      <CardHeader className="pb-6 bg-gradient-to-r from-[#F7D774]/20 to-[#F7D774]/10 rounded-t-2xl">
+    <Card className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+      <CardHeader className="pb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="p-3 bg-[#F7D774]/20 rounded-2xl shadow-sm">
-              <Bell className="h-5 w-5 text-[#2D2D2D]" />
+            <div className="p-2 bg-orange-50 rounded-lg">
+              <Bell className="h-5 w-5 text-orange-600" />
             </div>
             <div>
-              <CardTitle className="text-lg font-bold text-[#2D2D2D]">
+              <CardTitle className="text-lg font-semibold text-gray-900">
                 Investment Alerts
               </CardTitle>
               <p className="text-sm text-gray-600 mt-1">Real-time deal monitoring</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <Badge variant="secondary" className="text-xs bg-[#2E5E4E] text-white rounded-full shadow-sm px-3 py-1 font-medium">
+            <Badge className="text-xs bg-green-100 text-green-800 rounded-full px-3 py-1 font-medium">
               {activePresets.length} active
             </Badge>
             {totalNewMatches > 0 && (
-              <Badge variant="default" className="text-xs bg-[#F7D774] text-[#2D2D2D] shadow-md rounded-full px-3 py-1 font-medium animate-pulse">
+              <Badge className="text-xs bg-orange-100 text-orange-800 rounded-full px-3 py-1 font-medium">
                 {totalNewMatches} new
               </Badge>
             )}
@@ -114,15 +114,15 @@ export default function AlertsPanel() {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-6 p-6">
+      <CardContent className="space-y-4">
         {/* Alert Presets */}
         {presets.map(preset => (
           <div
             key={preset.id}
-            className={`p-5 rounded-2xl transition-all duration-300 hover:shadow-md ${
+            className={`p-4 rounded-lg transition-all duration-200 border ${
               preset.isActive 
-                ? 'bg-gradient-to-r from-[#F7D774]/20 to-[#F7D774]/10 border border-[#F7D774]/30 shadow-sm' 
-                : 'bg-white border border-gray-200 hover:bg-gray-50'
+                ? 'bg-green-50 border-green-200' 
+                : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}
           >
             <div className="flex items-start justify-between">

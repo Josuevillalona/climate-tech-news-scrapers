@@ -35,23 +35,23 @@ export default function FilterPanel({ onCreateAlert }: FilterPanelProps = {}) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <Card className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border-0">
-      <CardHeader className="pb-6 bg-gradient-to-r from-[#F3F3F3] to-[#AEE1F6]/30 rounded-t-2xl">
+    <Card className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+      <CardHeader className="pb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="p-3 bg-[#F7D774] rounded-2xl shadow-sm">
-              <Filter className="h-5 w-5 text-[#2D2D2D]" />
+            <div className="p-2 bg-blue-50 rounded-lg">
+              <Filter className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <CardTitle className="text-lg font-bold text-[#2D2D2D]">
-                Alex's Investment Filters
+              <CardTitle className="text-lg font-semibold text-gray-900">
+                Investment Filters
               </CardTitle>
               <p className="text-sm text-gray-600 mt-1">Customize your deal discovery</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
             {activeFilterCount > 0 && (
-              <Badge variant="secondary" className="text-xs bg-[#2E5E4E] text-white rounded-full shadow-sm px-3 py-1 font-medium">
+              <Badge className="text-xs bg-blue-100 text-blue-800 rounded-full px-3 py-1 font-medium">
                 {activeFilterCount} active
               </Badge>
             )}
@@ -60,7 +60,7 @@ export default function FilterPanel({ onCreateAlert }: FilterPanelProps = {}) {
                 variant="ghost"
                 size="sm"
                 onClick={resetFilters}
-                className="text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-full px-4 py-2 transition-all duration-200"
+                className="text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg px-3 py-2"
               >
                 <X className="h-4 w-4 mr-1" />
                 Clear
@@ -70,7 +70,7 @@ export default function FilterPanel({ onCreateAlert }: FilterPanelProps = {}) {
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full p-2 transition-all duration-200"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg p-2"
             >
               <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
             </Button>
@@ -78,17 +78,17 @@ export default function FilterPanel({ onCreateAlert }: FilterPanelProps = {}) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-6 p-6">
+      <CardContent className="space-y-6">
         {/* Quick Filters Row */}
         <div className="flex items-center space-x-3 flex-wrap gap-3">
           <Button
             variant={filters.hasAiFocus === true ? "default" : "outline"}
             size="sm"
             onClick={() => updateFilter('hasAiFocus', filters.hasAiFocus === true ? null : true)}
-            className={`text-sm h-10 px-4 rounded-full font-medium transition-all duration-200 ${
+            className={`text-sm h-10 px-4 rounded-lg font-medium transition-colors ${
               filters.hasAiFocus === true 
-                ? 'bg-[#2E5E4E] text-white hover:bg-[#2E5E4E]/90 shadow-md' 
-                : 'text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                ? 'bg-green-600 text-white hover:bg-green-700' 
+                : 'text-gray-700 border-gray-200 hover:bg-gray-50'
             }`}
           >
             <Zap className="h-4 w-4 mr-2" />
@@ -104,10 +104,10 @@ export default function FilterPanel({ onCreateAlert }: FilterPanelProps = {}) {
                 : [...filters.stages, 'Seed'];
               updateFilter('stages', newStages);
             }}
-            className={`text-sm h-10 px-4 rounded-full font-medium transition-all duration-200 ${
+            className={`text-sm h-10 px-4 rounded-lg font-medium transition-colors ${
               filters.stages.includes('Seed') 
-                ? 'bg-[#2E5E4E] text-white hover:bg-[#2E5E4E]/90 shadow-md' 
-                : 'text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                ? 'bg-green-600 text-white hover:bg-green-700' 
+                : 'text-gray-700 border-gray-200 hover:bg-gray-50'
             }`}
           >
             Seed Stage
@@ -122,10 +122,10 @@ export default function FilterPanel({ onCreateAlert }: FilterPanelProps = {}) {
                 : [...filters.stages, 'Series A'];
               updateFilter('stages', newStages);
             }}
-            className={`text-sm h-10 px-4 rounded-full font-medium transition-all duration-200 ${
+            className={`text-sm h-10 px-4 rounded-lg font-medium transition-colors ${
               filters.stages.includes('Series A') 
-                ? 'bg-[#2E5E4E] text-white hover:bg-[#2E5E4E]/90 shadow-md' 
-                : 'text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                ? 'bg-green-600 text-white hover:bg-green-700' 
+                : 'text-gray-700 border-gray-200 hover:bg-gray-50'
             }`}
           >
             Series A
@@ -135,10 +135,10 @@ export default function FilterPanel({ onCreateAlert }: FilterPanelProps = {}) {
             variant={filters.minScore > 70 ? "default" : "outline"}
             size="sm"
             onClick={() => updateFilter('minScore', filters.minScore > 70 ? 0 : 70)}
-            className={`text-sm h-10 px-4 rounded-full font-medium transition-all duration-200 ${
+            className={`text-sm h-10 px-4 rounded-lg font-medium transition-colors ${
               filters.minScore > 70 
-                ? 'bg-[#2E5E4E] text-white hover:bg-[#2E5E4E]/90 shadow-md' 
-                : 'text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                ? 'bg-green-600 text-white hover:bg-green-700' 
+                : 'text-gray-700 border-gray-200 hover:bg-gray-50'
             }`}
           >
             <TrendingUp className="h-4 w-4 mr-2" />
@@ -148,7 +148,7 @@ export default function FilterPanel({ onCreateAlert }: FilterPanelProps = {}) {
 
         {/* Expanded Filters */}
         {isExpanded && (
-          <div className="space-y-6 pt-6 border-t border-gray-200">
+          <div className="space-y-6 pt-6 border-t border-gray-100">
             {/* Funding Stages */}
             <div className="bg-gradient-to-r from-[#F3F3F3] to-[#AEE1F6]/20 p-5 rounded-2xl">
               <label className="text-sm font-semibold text-[#2D2D2D] mb-4 block flex items-center">
