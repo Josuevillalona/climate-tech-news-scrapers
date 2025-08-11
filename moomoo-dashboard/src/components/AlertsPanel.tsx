@@ -125,25 +125,25 @@ export default function AlertsPanel() {
                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
+            <div className="flex items-start justify-between gap-3 w-full max-w-full overflow-hidden">
+              <div className="flex-1 min-w-0 overflow-hidden">
                 <div className="flex items-center space-x-3 mb-3">
-                  <h4 className="text-base font-semibold text-[#2D2D2D]">
+                  <h4 className="text-base font-semibold text-[#2D2D2D] truncate">
                     {preset.name}
                   </h4>
                   {preset.isActive && (
-                    <Badge variant="outline" className="text-xs text-[#2E5E4E] border-[#2E5E4E] bg-[#2E5E4E]/10 rounded-full px-2 py-1 font-medium">
+                    <Badge variant="outline" className="text-xs text-[#2E5E4E] border-[#2E5E4E] bg-[#2E5E4E]/10 rounded-full px-2 py-1 font-medium whitespace-nowrap">
                       <Play className="h-3 w-3 mr-1" />
                       Active
                     </Badge>
                   )}
                   {preset.newMatches > 0 && (
-                    <Badge variant="default" className="text-xs bg-[#F7D774] text-[#2D2D2D] shadow-sm rounded-full px-2 py-1 font-medium animate-pulse">
+                    <Badge variant="default" className="text-xs bg-[#F7D774] text-[#2D2D2D] shadow-sm rounded-full px-2 py-1 font-medium animate-pulse whitespace-nowrap">
                       {preset.newMatches} new
                     </Badge>
                   )}
                 </div>
-                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed line-clamp-2">
                   {preset.description}
                 </p>
                 
@@ -163,17 +163,17 @@ export default function AlertsPanel() {
 
                 {/* Enhanced Company Carousel - One Company Per Card */}
                 {preset.lastMatchedDeals && preset.lastMatchedDeals.length > 0 && (
-                  <div className="mt-3 p-4 bg-gradient-to-r from-[#F7D774]/5 to-[#2E5E4E]/5 rounded-2xl border border-[#F7D774]/20">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-2">
-                        <Building2 className="h-4 w-4 text-[#F7D774]" />
-                        <span className="text-sm font-semibold text-[#2D2D2D]">Recent Matches</span>
-                        <Badge className="text-xs bg-[#2E5E4E] text-white rounded-full px-2 py-1">
+                  <div className="mt-3 p-4 bg-gradient-to-r from-[#F7D774]/5 to-[#2E5E4E]/5 rounded-2xl border border-[#F7D774]/20 w-full max-w-full overflow-hidden">
+                    <div className="flex items-center justify-between mb-3 w-full">
+                      <div className="flex items-center space-x-2 min-w-0 flex-1 overflow-hidden">
+                        <Building2 className="h-4 w-4 text-[#F7D774] flex-shrink-0" />
+                        <span className="text-sm font-semibold text-[#2D2D2D] truncate">Recent Matches</span>
+                        <Badge className="text-xs bg-[#2E5E4E] text-white rounded-full px-2 py-1 flex-shrink-0">
                           {preset.lastMatchedDeals.length}
                         </Badge>
                       </div>
                       {preset.lastMatchedDeals.length > 1 && (
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-1 flex-shrink-0">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -182,8 +182,8 @@ export default function AlertsPanel() {
                           >
                             <ChevronLeft className="h-4 w-4 text-[#2D2D2D]" />
                           </Button>
-                          <span className="text-xs text-gray-600 min-w-[3rem] text-center">
-                            {(carouselStates[preset.id] || 0) + 1} of {preset.lastMatchedDeals.length}
+                          <span className="text-xs text-gray-600 text-center whitespace-nowrap px-1">
+                            {(carouselStates[preset.id] || 0) + 1}/{preset.lastMatchedDeals.length}
                           </span>
                           <Button
                             variant="ghost"
@@ -198,41 +198,43 @@ export default function AlertsPanel() {
                     </div>
                     
                     {/* Single Company Card Display */}
-                    <div className="relative">
+                    <div className="relative w-full max-w-full">
                       {preset.lastMatchedDeals.length > 0 && (
-                        <div className="bg-white rounded-2xl border border-gray-200/60 p-4 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div className="bg-white rounded-2xl border border-gray-200/60 p-4 shadow-sm hover:shadow-md transition-all duration-300 w-full max-w-full box-border">
                           {(() => {
                             const currentIndex = carouselStates[preset.id] || 0;
                             const deal = preset.lastMatchedDeals[currentIndex];
                             return (
-                              <div className="space-y-3">
+                              <div className="space-y-3 w-full max-w-full">
                                 {/* Company Header */}
-                                <div className="flex items-start justify-between">
-                                  <div className="flex-1 min-w-0">
-                                    <h4 className="text-lg font-bold text-[#2D2D2D] mb-1 truncate">
-                                      {deal.companyName}
+                                <div className="flex items-start gap-3 w-full max-w-full">
+                                  <div className="flex-1 min-w-0 max-w-full overflow-hidden">
+                                    <h4 className={`font-bold text-[#2D2D2D] mb-1 truncate w-full leading-tight ${
+                                      deal.companyName.length > 30 ? 'text-sm' : 'text-base'
+                                    }`}>
+                                      {deal.companyName.length > 40 ? `${deal.companyName.slice(0, 40)}...` : deal.companyName}
                                     </h4>
-                                    <p className="text-sm text-gray-600 line-clamp-2">
+                                    <p className="text-sm text-gray-600 line-clamp-2 overflow-hidden break-words w-full">
                                       {deal.companyDescription}
                                     </p>
                                   </div>
-                                  <div className={`w-3 h-3 rounded-full ml-3 mt-1 ${
+                                  <div className={`w-3 h-3 rounded-full flex-shrink-0 mt-1 ${
                                     deal.scoreColor === 'green' ? 'bg-green-500' :
                                     deal.scoreColor === 'yellow' ? 'bg-yellow-500' : 'bg-red-500'
                                   }`} title={`Alex Score: ${deal.score}`} />
                                 </div>
 
                                 {/* Deal Details */}
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center space-x-3">
-                                    <div className="flex items-center space-x-1">
+                                <div className="flex items-center gap-3 w-full max-w-full">
+                                  <div className="flex items-center space-x-2 min-w-0 flex-1 overflow-hidden">
+                                    <div className="flex items-center space-x-1 flex-shrink-0">
                                       <DollarSign className="h-4 w-4 text-[#F7D774]" />
-                                      <span className="text-base font-semibold text-[#2D2D2D]">
+                                      <span className="text-base font-semibold text-[#2D2D2D] whitespace-nowrap">
                                         {formatAmount(deal.amount)}
                                       </span>
                                     </div>
                                     {deal.stage && (
-                                      <Badge variant="outline" className="text-xs bg-[#2E5E4E]/10 text-[#2E5E4E] border-[#2E5E4E]/30 rounded-full px-3 py-1">
+                                      <Badge variant="outline" className="text-xs bg-[#2E5E4E]/10 text-[#2E5E4E] border-[#2E5E4E]/30 rounded-full px-2 py-1 whitespace-nowrap truncate max-w-[80px]">
                                         {deal.stage}
                                       </Badge>
                                     )}
@@ -240,33 +242,33 @@ export default function AlertsPanel() {
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-9 w-9 p-0 rounded-full hover:bg-[#F7D774]/20 text-[#2D2D2D]"
+                                    className="h-8 w-8 p-0 rounded-full hover:bg-[#F7D774]/20 text-[#2D2D2D] flex-shrink-0"
                                     onClick={() => window.open(deal.sourceUrl, '_blank')}
                                   >
-                                    <Eye className="h-4 w-4" />
+                                    <Eye className="h-3 w-3" />
                                   </Button>
                                 </div>
 
                                 {/* Badges Row */}
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-1 w-full max-w-full overflow-hidden">
                                   {deal.hasAiFocus && (
-                                    <Badge variant="secondary" className="text-xs bg-[#F7D774] text-[#2D2D2D] rounded-full px-3 py-1">
-                                      🤖 AI Focus
+                                    <Badge variant="secondary" className="text-xs bg-[#F7D774] text-[#2D2D2D] rounded-full px-2 py-1 whitespace-nowrap">
+                                      🤖 AI
                                     </Badge>
                                   )}
-                                  {deal.sector && deal.sector.slice(0, 2).map(sector => (
-                                    <Badge key={sector} variant="outline" className="text-xs bg-gray-100 text-gray-700 border-gray-300 rounded-full px-3 py-1">
+                                  {deal.sector && deal.sector.slice(0, 1).map(sector => (
+                                    <Badge key={sector} variant="outline" className="text-xs bg-gray-100 text-gray-700 border-gray-300 rounded-full px-2 py-1 max-w-[100px] truncate">
                                       {sector}
                                     </Badge>
                                   ))}
-                                  {deal.sector && deal.sector.length > 2 && (
-                                    <Badge variant="outline" className="text-xs bg-gray-100 text-gray-500 border-gray-300 rounded-full px-3 py-1">
-                                      +{deal.sector.length - 2} more
+                                  {deal.sector && deal.sector.length > 1 && (
+                                    <Badge variant="outline" className="text-xs bg-gray-100 text-gray-500 border-gray-300 rounded-full px-2 py-1 whitespace-nowrap">
+                                      +{deal.sector.length - 1}
                                     </Badge>
                                   )}
                                   {deal.country && (
-                                    <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200 rounded-full px-3 py-1">
-                                      🌍 {deal.country}
+                                    <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200 rounded-full px-2 py-1 max-w-[60px] truncate">
+                                      {deal.country}
                                     </Badge>
                                   )}
                                 </div>
@@ -297,12 +299,12 @@ export default function AlertsPanel() {
                 )}
               </div>
               
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => togglePreset(preset.id)}
-                  className={`text-xs rounded-full p-2 ${
+                  className={`text-xs rounded-full p-1 h-7 w-7 ${
                     preset.isActive 
                       ? 'text-[#2E5E4E] hover:bg-[#2E5E4E]/10' 
                       : 'text-gray-600 hover:bg-gray-100'
@@ -317,7 +319,7 @@ export default function AlertsPanel() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-xs text-gray-600 hover:text-gray-700 rounded-full p-2 hover:bg-gray-100"
+                  className="text-xs text-gray-600 hover:text-gray-700 rounded-full p-1 hover:bg-gray-100 h-7 w-7"
                 >
                   <Eye className="h-3 w-3" />
                 </Button>
@@ -325,7 +327,7 @@ export default function AlertsPanel() {
                   variant="ghost"
                   size="sm"
                   onClick={() => deletePreset(preset.id)}
-                  className="text-xs text-gray-600 hover:text-red-500 rounded-full p-2 hover:bg-red-50"
+                  className="text-xs text-gray-600 hover:text-red-500 rounded-full p-1 hover:bg-red-50 h-7 w-7"
                 >
                   <Trash2 className="h-3 w-3" />
                 </Button>

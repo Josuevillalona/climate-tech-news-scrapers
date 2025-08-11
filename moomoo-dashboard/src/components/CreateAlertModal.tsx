@@ -63,93 +63,98 @@ export default function CreateAlertModal({ isOpen, onClose }: { isOpen: boolean;
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 overflow-y-auto backdrop-blur-sm">
       <div className="w-full max-w-md mx-auto my-8">
-        <Card className="bg-[#2D2D2D] border-[#2E5E4E] shadow-2xl rounded-2xl">
-          <CardHeader className="pb-4">
+        <Card className="bg-white border border-gray-200 shadow-2xl rounded-2xl">
+          <CardHeader className="pb-6">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold text-white">
-                Create Investment Alert
-              </CardTitle>
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-orange-50 rounded-lg">
+                  <Zap className="h-5 w-5 text-orange-600" />
+                </div>
+                <CardTitle className="text-lg font-semibold text-gray-900">
+                  Create Investment Alert
+                </CardTitle>
+              </div>
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={onClose}
-                className="text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-full"
+                className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg p-2"
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
           </CardHeader>
         
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           {/* Current Filter Summary */}
-          <div className="p-3 bg-[#2E5E4E]/20 border border-[#2E5E4E]/30 rounded-2xl">
+          <div className="p-4 bg-orange-50 border border-orange-200 rounded-xl">
             <div className="flex items-center space-x-2 mb-2">
-              <Zap className="h-4 w-4 text-[#F7D774]" />
-              <span className="text-sm font-medium text-white">Current Filters</span>
-              <Badge variant="secondary" className="text-xs bg-[#F7D774] text-[#2D2D2D] rounded-full px-2 py-1">
+              <Zap className="h-4 w-4 text-orange-600" />
+              <span className="text-sm font-medium text-orange-900">Current Filters</span>
+              <Badge className="text-xs bg-orange-100 text-orange-800 border border-orange-200 rounded-full px-2 py-1">
                 {activeFilterCount} active
               </Badge>
             </div>
-            <p className="text-xs text-gray-300">
+            <p className="text-sm text-orange-700">
               {generateDescription()}
             </p>
           </div>
 
           {/* Alert Name */}
           <div>
-            <label className="text-sm font-medium text-white mb-2 block">
+            <label className="text-sm font-medium text-gray-900 mb-2 block">
               Alert Name *
             </label>
             <Input
               placeholder="e.g., High-Score AI Seed Deals"
               value={alertName}
               onChange={(e) => setAlertName(e.target.value)}
-              className="w-full bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 rounded-xl focus:border-[#F7D774] focus:ring-[#F7D774]"
+              className="w-full bg-white border border-gray-200 text-gray-900 placeholder-gray-500 rounded-lg focus:ring-1 focus:ring-moo-yellow focus:border-moo-yellow"
               autoFocus
             />
           </div>
 
           {/* Alert Description */}
           <div>
-            <label className="text-sm font-medium text-white mb-2 block">
+            <label className="text-sm font-medium text-gray-900 mb-2 block">
               Description (optional)
             </label>
             <Input
               placeholder={generateDescription()}
               value={alertDescription}
               onChange={(e) => setAlertDescription(e.target.value)}
-              className="w-full bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 rounded-xl focus:border-[#F7D774] focus:ring-[#F7D774]"
+              className="w-full bg-white border border-gray-200 text-gray-900 placeholder-gray-500 rounded-lg focus:ring-1 focus:ring-moo-yellow focus:border-moo-yellow"
             />
           </div>
 
           {/* Filter Preview */}
-          <div className="space-y-2">
-            <span className="text-sm font-medium text-white">Alert Criteria:</span>
+          <div className="space-y-3">
+            <span className="text-sm font-medium text-gray-900">Alert Criteria:</span>
             <div className="flex flex-wrap gap-2">
               {filters.stages.map(stage => (
-                <Badge key={stage} variant="outline" className="text-xs bg-[#2E5E4E]/30 text-white border-[#2E5E4E] rounded-full">
+                <Badge key={stage} className="text-xs bg-blue-50 text-blue-800 border border-blue-200 rounded-full px-3 py-1">
                   {stage}
                 </Badge>
               ))}
               {filters.hasAiFocus === true && (
-                <Badge variant="secondary" className="text-xs bg-[#F7D774] text-[#2D2D2D] rounded-full">
+                <Badge style={{ backgroundColor: '#F7D774', color: '#1F2937' }} className="text-xs rounded-full px-3 py-1 font-medium">
                   AI Focus
                 </Badge>
               )}
               {filters.minScore > 0 && (
-                <Badge variant="secondary" className="text-xs bg-[#F7D774] text-[#2D2D2D] rounded-full">
+                <Badge style={{ backgroundColor: '#F7D774', color: '#1F2937' }} className="text-xs rounded-full px-3 py-1 font-medium">
                   Score ≥{filters.minScore}
                 </Badge>
               )}
               {filters.sectors.slice(0, 3).map(sector => (
-                <Badge key={sector} variant="outline" className="text-xs bg-[#2E5E4E]/30 text-white border-[#2E5E4E] rounded-full">
+                <Badge key={sector} className="text-xs bg-green-50 text-green-800 border border-green-200 rounded-full px-3 py-1">
                   {sector}
                 </Badge>
               ))}
               {filters.sectors.length > 3 && (
-                <Badge variant="outline" className="text-xs bg-[#2E5E4E]/30 text-white border-[#2E5E4E] rounded-full">
+                <Badge className="text-xs bg-gray-50 text-gray-600 border border-gray-200 rounded-full px-3 py-1">
                   +{filters.sectors.length - 3} more
                 </Badge>
               )}
@@ -159,16 +164,17 @@ export default function CreateAlertModal({ isOpen, onClose }: { isOpen: boolean;
           {/* Actions */}
           <div className="flex space-x-3 pt-4">
             <Button 
-              variant="outline" 
+              variant="secondary" 
               onClick={onClose} 
-              className="flex-1 bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:text-white rounded-xl"
+              className="flex-1 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg px-4 py-2"
             >
               Cancel
             </Button>
             <Button 
               onClick={handleCreate}
               disabled={!alertName.trim()}
-              className="flex-1 bg-[#F7D774] hover:bg-[#F7D774]/90 text-[#2D2D2D] font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: '#F7D774' }}
+              className="flex-1 hover:opacity-90 text-gray-900 font-semibold rounded-lg px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="h-4 w-4 mr-2" />
               Create Alert

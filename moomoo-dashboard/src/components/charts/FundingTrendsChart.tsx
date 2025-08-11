@@ -112,11 +112,11 @@ export default function FundingTrendsChart() {
 
   if (loading) {
     return (
-      <Card className="bg-white rounded-xl shadow-sm border border-gray-200">
+      <Card className="bg-white rounded-xl border border-gray-200 shadow-sm">
         <CardContent className="flex items-center justify-center h-64">
           <div className="flex items-center space-x-3">
-            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-            <span className="text-gray-600">Loading funding trends...</span>
+            <Loader2 className="h-6 w-6 animate-spin text-[#2E5E4E]" />
+            <span className="text-gray-700 font-medium">Loading funding trends...</span>
           </div>
         </CardContent>
       </Card>
@@ -125,11 +125,11 @@ export default function FundingTrendsChart() {
 
   if (error) {
     return (
-      <Card className="bg-white rounded-xl shadow-sm border border-gray-200">
+      <Card className="bg-white rounded-xl border border-red-200 shadow-sm">
         <CardContent className="flex items-center justify-center h-64">
           <div className="flex items-center space-x-3 text-red-600">
             <AlertCircle className="h-6 w-6" />
-            <span>Failed to load funding trends</span>
+            <span className="font-medium">Failed to load funding trends</span>
           </div>
         </CardContent>
       </Card>
@@ -138,14 +138,14 @@ export default function FundingTrendsChart() {
 
   if (trendData.length === 0) {
     return (
-      <Card className="bg-white rounded-xl shadow-sm border border-gray-200">
+      <Card className="bg-white rounded-xl border border-gray-200 shadow-sm">
         <CardContent className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-[#F3F3F3] rounded-full flex items-center justify-center">
               <TrendingUp className="w-8 h-8 text-gray-400" />
             </div>
-            <p className="text-gray-600">No trend data available</p>
-            <p className="text-sm text-gray-500">Data will appear as deals are processed</p>
+            <p className="text-gray-700 font-medium">No trend data available</p>
+            <p className="text-sm text-gray-500 mt-1">Data will appear as deals are processed</p>
           </div>
         </CardContent>
       </Card>
@@ -162,12 +162,12 @@ export default function FundingTrendsChart() {
   const fundingTrend = previousMonth ? ((currentMonth.funding - previousMonth.funding) / previousMonth.funding) * 100 : 0;
 
   return (
-    <Card className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+    <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
       <CardHeader className="pb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-purple-50 rounded-lg">
-              <TrendingUp className="h-5 w-5 text-purple-600" />
+            <div className="p-2 bg-[#AEE1F6]/20 rounded-xl">
+              <TrendingUp className="h-5 w-5 text-[#2E5E4E]" />
             </div>
             <div>
               <CardTitle className="text-lg font-semibold text-gray-900">
@@ -186,11 +186,11 @@ export default function FundingTrendsChart() {
       <CardContent className="space-y-6">
         {/* Summary Stats */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+          <div className="p-4 bg-[#2E5E4E]/5 rounded-xl border border-[#2E5E4E]/10">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-blue-900">Total Deals</span>
+              <span className="text-sm font-medium text-[#2E5E4E]">Total Deals</span>
               <div className={`flex items-center text-xs font-medium ${
-                dealsTrend > 0 ? 'text-green-600' : dealsTrend < 0 ? 'text-red-600' : 'text-gray-600'
+                dealsTrend > 0 ? 'text-[#2E5E4E]' : dealsTrend < 0 ? 'text-red-600' : 'text-gray-600'
               }`}>
                 {dealsTrend !== 0 && (
                   <>
@@ -204,16 +204,16 @@ export default function FundingTrendsChart() {
                 )}
               </div>
             </div>
-            <div className="text-2xl font-bold text-blue-900">
+            <div className="text-2xl font-bold text-[#2E5E4E]">
               {trendData.reduce((sum, d) => sum + d.deals, 0)}
             </div>
           </div>
           
-          <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+          <div className="p-4 bg-[#F7D774]/10 rounded-xl border border-[#F7D774]/20">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-green-900">Total Funding</span>
+              <span className="text-sm font-medium text-gray-900">Total Funding</span>
               <div className={`flex items-center text-xs font-medium ${
-                fundingTrend > 0 ? 'text-green-600' : fundingTrend < 0 ? 'text-red-600' : 'text-gray-600'
+                fundingTrend > 0 ? 'text-[#2E5E4E]' : fundingTrend < 0 ? 'text-red-600' : 'text-gray-600'
               }`}>
                 {fundingTrend !== 0 && (
                   <>
@@ -227,30 +227,30 @@ export default function FundingTrendsChart() {
                 )}
               </div>
             </div>
-            <div className="text-2xl font-bold text-green-900">
+            <div className="text-2xl font-bold text-gray-900">
               ${(trendData.reduce((sum, d) => sum + d.funding, 0) / 1000).toFixed(1)}B
             </div>
           </div>
         </div>
 
-        {/* Simple Bar Chart */}
+        {/* Deal Volume Chart */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-gray-700">Monthly Deal Volume</h4>
+          <h4 className="text-sm font-semibold text-gray-900">Monthly Deal Volume</h4>
           <div className="space-y-3">
             {trendData.map((dataPoint, index) => (
               <div key={dataPoint.month} className="flex items-center space-x-3">
-                <span className="text-sm text-gray-600 w-12">{dataPoint.month}</span>
-                <div className="flex-1 flex items-center space-x-2">
-                  <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+                <span className="text-sm font-medium text-gray-700 w-12">{dataPoint.month}</span>
+                <div className="flex-1 flex items-center space-x-3">
+                  <div className="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
                     <div 
-                      className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full transition-all duration-500 ease-out"
+                      className="h-full bg-gradient-to-r from-[#2E5E4E] to-[#2E5E4E]/80 rounded-full transition-all duration-700 ease-out"
                       style={{ 
                         width: maxDeals > 0 ? `${(dataPoint.deals / maxDeals) * 100}%` : '0%',
-                        animationDelay: `${index * 100}ms`
+                        animationDelay: `${index * 150}ms`
                       }}
                     />
                   </div>
-                  <span className="text-sm font-medium text-gray-900 w-8">
+                  <span className="text-sm font-semibold text-gray-900 w-8 text-right">
                     {dataPoint.deals}
                   </span>
                 </div>
@@ -261,22 +261,22 @@ export default function FundingTrendsChart() {
 
         {/* Funding Chart */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-gray-700">Monthly Funding ($M)</h4>
+          <h4 className="text-sm font-semibold text-gray-900">Monthly Funding ($M)</h4>
           <div className="space-y-3">
             {trendData.map((dataPoint, index) => (
               <div key={`funding-${dataPoint.month}`} className="flex items-center space-x-3">
-                <span className="text-sm text-gray-600 w-12">{dataPoint.month}</span>
-                <div className="flex-1 flex items-center space-x-2">
-                  <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+                <span className="text-sm font-medium text-gray-700 w-12">{dataPoint.month}</span>
+                <div className="flex-1 flex items-center space-x-3">
+                  <div className="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
                     <div 
-                      className="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full transition-all duration-500 ease-out"
+                      className="h-full bg-gradient-to-r from-[#F7D774] to-[#F7D774]/80 rounded-full transition-all duration-700 ease-out"
                       style={{ 
                         width: maxFunding > 0 ? `${(dataPoint.funding / maxFunding) * 100}%` : '0%',
-                        animationDelay: `${index * 100}ms`
+                        animationDelay: `${index * 150}ms`
                       }}
                     />
                   </div>
-                  <span className="text-sm font-medium text-gray-900 w-12 text-right">
+                  <span className="text-sm font-semibold text-gray-900 w-12 text-right">
                     ${dataPoint.funding.toFixed(0)}M
                   </span>
                 </div>

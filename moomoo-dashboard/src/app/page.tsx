@@ -325,7 +325,7 @@ function DashboardContent() {
                 </div>
                 <div className="space-y-6">
                   {/* Quick Insights with Real Data */}
-                  <Card className="bg-white rounded-xl shadow-sm border border-gray-200">
+                  <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
                     <CardHeader className="pb-4">
                       <CardTitle className="text-lg font-semibold text-gray-900">
                         Quick Insights
@@ -334,30 +334,30 @@ function DashboardContent() {
                     <CardContent className="space-y-4">
                       {dealsLoading ? (
                         <div className="flex items-center justify-center py-8">
-                          <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-                          <span className="ml-2 text-gray-600">Loading insights...</span>
+                          <Loader2 className="h-6 w-6 animate-spin text-[#2E5E4E]" />
+                          <span className="ml-2 text-gray-700">Loading insights...</span>
                         </div>
                       ) : quickInsights ? (
                         <>
-                          <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                            <span className="text-sm font-medium text-blue-900">Hot Sector</span>
-                            <span className="text-sm font-semibold text-blue-900">{quickInsights.hotSector}</span>
+                          <div className="flex items-center justify-between p-4 bg-[#2E5E4E]/5 rounded-xl border border-[#2E5E4E]/10">
+                            <span className="text-sm font-medium text-[#2E5E4E]">Hot Sector</span>
+                            <span className="text-sm font-semibold text-gray-900">{quickInsights.hotSector}</span>
                           </div>
-                          <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                            <span className="text-sm font-medium text-green-900">Avg Deal Size</span>
-                            <span className="text-sm font-semibold text-green-900">
+                          <div className="flex items-center justify-between p-4 bg-[#F7D774]/10 rounded-xl border border-[#F7D774]/20">
+                            <span className="text-sm font-medium text-gray-900">Avg Deal Size</span>
+                            <span className="text-sm font-semibold text-gray-900">
                               {quickInsights.avgDealSize > 0 ? `$${quickInsights.avgDealSize}M` : 'Calculating...'}
                             </span>
                           </div>
-                          <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                            <span className="text-sm font-medium text-purple-900">Top Location</span>
-                            <span className="text-sm font-semibold text-purple-900">{quickInsights.topLocation}</span>
+                          <div className="flex items-center justify-between p-4 bg-[#AEE1F6]/20 rounded-xl border border-[#AEE1F6]/30">
+                            <span className="text-sm font-medium text-[#2E5E4E]">Top Location</span>
+                            <span className="text-sm font-semibold text-gray-900">{quickInsights.topLocation}</span>
                           </div>
                         </>
                       ) : (
                         <div className="text-center py-8 text-gray-500">
-                          <p>No insights available yet</p>
-                          <p className="text-xs">Data will update as deals are processed</p>
+                          <p className="font-medium">No insights available yet</p>
+                          <p className="text-xs text-gray-400 mt-1">Data will update as deals are processed</p>
                         </div>
                       )}
                     </CardContent>
@@ -367,24 +367,24 @@ function DashboardContent() {
 
               {/* Stats Overview */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+                <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <CardTitle className="text-sm font-semibold text-gray-700">
+                    <CardTitle className="text-sm font-semibold text-gray-900">
                       Deals
                     </CardTitle>
-                    <div className="p-2 bg-blue-50 rounded-lg">
-                      <Building2 className="h-5 w-5 text-blue-600" />
+                    <div className="p-2 bg-[#2E5E4E]/10 rounded-xl">
+                      <Building2 className="h-5 w-5 text-[#2E5E4E]" />
                     </div>
                   </CardHeader>
                   <CardContent>
                     {statsLoading ? (
-                      <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
                     ) : (
                       <>
                         <div className="text-4xl font-bold text-gray-900 mb-2">
                           {stats.totalDeals.toLocaleString()}
                         </div>
-                        <p className="text-sm text-green-600 flex items-center font-medium">
+                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
                           <TrendingUp className="w-4 h-4 mr-1" />
                           Processing pipeline
                         </p>
@@ -393,24 +393,24 @@ function DashboardContent() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+                <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <CardTitle className="text-sm font-semibold text-gray-700">
+                    <CardTitle className="text-sm font-semibold text-gray-900">
                       Volume
                     </CardTitle>
-                    <div className="p-2 bg-green-50 rounded-lg">
-                      <DollarSign className="h-5 w-5 text-green-600" />
+                    <div className="p-2 bg-[#F7D774]/20 rounded-xl">
+                      <DollarSign className="h-5 w-5 text-gray-900" />
                     </div>
                   </CardHeader>
                   <CardContent>
                     {statsLoading ? (
-                      <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
                     ) : (
                       <>
                         <div className="text-4xl font-bold text-gray-900 mb-2">
                           ${formatLargeNumber(stats.totalFunding)}
                         </div>
-                        <p className="text-sm text-green-600 flex items-center font-medium">
+                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
                           <TrendingUp className="w-4 h-4 mr-1" />
                           Total tracked funding
                         </p>
@@ -419,24 +419,24 @@ function DashboardContent() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+                <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <CardTitle className="text-sm font-semibold text-gray-700">
+                    <CardTitle className="text-sm font-semibold text-gray-900">
                       Avg. Deal
                     </CardTitle>
-                    <div className="p-2 bg-yellow-50 rounded-lg">
-                      <TrendingUp className="h-5 w-5 text-yellow-600" />
+                    <div className="p-2 bg-[#AEE1F6]/30 rounded-xl">
+                      <TrendingUp className="h-5 w-5 text-[#2E5E4E]" />
                     </div>
                   </CardHeader>
                   <CardContent>
                     {statsLoading ? (
-                      <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
                     ) : (
                       <>
                         <div className="text-4xl font-bold text-gray-900 mb-2">
                           ${formatLargeNumber(stats.avgDealSize)}
                         </div>
-                        <p className="text-sm text-yellow-600 flex items-center font-medium">
+                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
                           <TrendingUp className="w-4 h-4 mr-1" />
                           Climate tech average
                         </p>
@@ -445,24 +445,24 @@ function DashboardContent() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+                <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <CardTitle className="text-sm font-semibold text-gray-700">
+                    <CardTitle className="text-sm font-semibold text-gray-900">
                       Avg Score
                     </CardTitle>
-                    <div className="p-2 bg-purple-50 rounded-lg">
-                      <Users className="h-5 w-5 text-purple-600" />
+                    <div className="p-2 bg-[#F3F3F3] rounded-xl">
+                      <Users className="h-5 w-5 text-gray-700" />
                     </div>
                   </CardHeader>
                   <CardContent>
                     {statsLoading ? (
-                      <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
                     ) : (
                       <>
                         <div className="text-4xl font-bold text-gray-900 mb-2">
                           {stats.avgScore.toFixed(1)}/10
                         </div>
-                        <p className="text-sm text-green-600 flex items-center font-medium">
+                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
                           <TrendingUp className="w-4 h-4 mr-1" />
                           Alex's filter match
                         </p>

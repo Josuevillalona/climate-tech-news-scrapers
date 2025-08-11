@@ -106,22 +106,22 @@ export default function NewsIntelligenceFeed() {
   ];
 
   return (
-    <Card className="h-full bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border-0">
-      <CardHeader className="pb-6 bg-gradient-to-r from-[#AEE1F6]/20 to-[#F3F3F3] rounded-t-2xl">
+    <Card className="h-full bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+      <CardHeader className="pb-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="p-3 bg-orange-100 rounded-2xl shadow-sm">
-              <TrendingUp className="h-5 w-5 text-orange-600" />
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-blue-50 rounded-lg">
+              <TrendingUp className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <CardTitle className="text-lg font-bold text-[#2D2D2D]">
+              <CardTitle className="text-lg font-semibold text-gray-900">
                 Climate Tech News Intelligence
               </CardTitle>
               <p className="text-sm text-gray-600 mt-1">AI-powered news analysis & insights</p>
             </div>
           </div>
-          <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200 rounded-full shadow-sm px-3 py-1 font-medium">
-            <div className="w-2 h-2 bg-[#2E5E4E] rounded-full mr-2 animate-pulse"></div>
+          <Badge className="text-xs bg-green-50 text-green-700 border border-green-200 rounded-full px-3 py-1 font-medium">
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
             Live Feed
           </Badge>
         </div>
@@ -134,7 +134,7 @@ export default function NewsIntelligenceFeed() {
               placeholder="Search news or companies..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 bg-gray-50 border-0 text-[#2D2D2D] focus:bg-white focus:shadow-lg h-12 rounded-2xl transition-all duration-200"
+              className="pl-12 bg-white border border-gray-200 text-gray-900 focus:ring-1 focus:ring-moo-yellow focus:border-moo-yellow h-12 rounded-lg"
             />
           </div>
           
@@ -142,14 +142,15 @@ export default function NewsIntelligenceFeed() {
             {newsTypes.map((type) => (
               <Button
                 key={type.value}
-                variant={selectedType === type.value ? "default" : "outline"}
+                variant={selectedType === type.value ? "default" : "secondary"}
                 size="sm"
                 onClick={() => setSelectedType(type.value)}
-                className={`text-xs h-9 px-4 rounded-full transition-all duration-200 font-medium ${
+                className={`text-xs h-9 px-4 rounded-lg font-medium transition-all duration-200 ${
                   selectedType === type.value 
-                    ? 'bg-[#2E5E4E] text-white hover:bg-[#2E5E4E]/90 shadow-md' 
-                    : 'text-gray-600 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                    ? 'text-gray-900 shadow-sm' 
+                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
                 }`}
+                style={selectedType === type.value ? { backgroundColor: '#F7D774' } : {}}
               >
                 {type.label} <span className="ml-1 text-xs opacity-75">({type.count})</span>
               </Button>
@@ -182,12 +183,12 @@ export default function NewsIntelligenceFeed() {
         )}
 
         {!loading && !error && filteredNews.map((item) => (
-          <Card key={item.id} className="p-4 hover:shadow-md transition-shadow">
+          <Card key={item.id} className="p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200">
             <div className="space-y-3">
               {/* Header */}
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
-                  <h3 className="font-medium text-sm leading-5 mb-2">{item.title}</h3>
+                  <h3 className="font-medium text-sm leading-5 mb-2 text-gray-900">{item.title}</h3>
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <Clock className="h-3 w-3" />
                     {new Date(item.publishedAt).toLocaleDateString()}
@@ -200,7 +201,7 @@ export default function NewsIntelligenceFeed() {
                   <div className={`px-2 py-1 rounded-full text-xs font-medium ${getRelevanceColor(item.relevanceScore)}`}>
                     {item.relevanceScore}% Match
                   </div>
-                  <Button variant="ghost" size="sm" asChild>
+                  <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600 p-1 rounded-lg" asChild>
                     <a href={item.url} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="h-3 w-3" />
                     </a>
@@ -210,13 +211,13 @@ export default function NewsIntelligenceFeed() {
 
               {/* News Type and Funding Info */}
               <div className="flex items-center gap-2 flex-wrap">
-                <Badge className={`text-xs ${getNewsTypeColor(item.newsType)}`}>
+                <Badge className={`text-xs rounded-full px-3 py-1 ${getNewsTypeColor(item.newsType)}`}>
                   {getNewsTypeIcon(item.newsType)}
                   <span className="ml-1 capitalize">{item.newsType}</span>
                 </Badge>
                 
                 {item.fundingAmount && (
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge className="text-xs bg-green-50 text-green-700 border border-green-200 rounded-full px-3 py-1">
                     {item.fundingAmount}
                   </Badge>
                 )}
