@@ -128,55 +128,59 @@ function DashboardContent() {
         <nav className="flex-1 p-4 space-y-2">
           <button 
             onClick={() => setActiveView('deals')}
-            className={`w-full flex items-center justify-start text-left rounded-lg h-12 px-4 font-medium transition-all duration-200 ${
+            className={`w-full flex items-center justify-start text-left rounded-2xl h-12 px-4 font-medium transition-all duration-200 ${
               activeView === 'deals' 
-                ? 'bg-white/20 text-white font-medium' 
+                ? 'text-gray-900 font-semibold shadow-sm' 
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
+            style={activeView === 'deals' ? { backgroundColor: '#F7D774' } : {}}
           >
             <DollarSign className="h-5 w-5 mr-3" />
             Deals
           </button>
           <button 
             onClick={() => setActiveView('news')}
-            className={`w-full flex items-center justify-start text-left rounded-lg h-12 px-4 font-medium transition-all duration-200 ${
+            className={`w-full flex items-center justify-start text-left rounded-2xl h-12 px-4 font-medium transition-all duration-200 ${
               activeView === 'news' 
-                ? 'bg-white/20 text-white font-medium' 
+                ? 'text-gray-900 font-semibold shadow-sm' 
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
+            style={activeView === 'news' ? { backgroundColor: '#F7D774' } : {}}
           >
             <Globe className="h-5 w-5 mr-3" />
             Climate Tech News
           </button>
           <button 
             onClick={() => setActiveView('signals')}
-            className={`w-full flex items-center justify-start text-left rounded-lg h-12 px-4 font-medium transition-all duration-200 ${
+            className={`w-full flex items-center justify-start text-left rounded-2xl h-12 px-4 font-medium transition-all duration-200 ${
               activeView === 'signals' 
-                ? 'bg-white/20 text-white font-medium' 
+                ? 'text-gray-900 font-semibold shadow-sm' 
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
+            style={activeView === 'signals' ? { backgroundColor: '#F7D774' } : {}}
           >
             <BarChart3 className="h-5 w-5 mr-3" />
             Company Signals
           </button>
           <button 
             onClick={() => setActiveView('reports')}
-            className={`w-full flex items-center justify-start text-left rounded-lg h-12 px-4 font-medium transition-all duration-200 ${
+            className={`w-full flex items-center justify-start text-left rounded-2xl h-12 px-4 font-medium transition-all duration-200 ${
               activeView === 'reports' 
-                ? 'bg-white/20 text-white font-medium' 
+                ? 'text-gray-900 font-semibold shadow-sm' 
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
+            style={activeView === 'reports' ? { backgroundColor: '#F7D774' } : {}}
           >
             <FileText className="h-5 w-5 mr-3" />
             Reports
           </button>
           
           {/* Additional Navigation Items */}
-          <button className="w-full flex items-center justify-start text-left text-white/80 hover:bg-white/10 hover:text-white rounded-lg h-12 px-4 font-medium transition-all duration-200">
+          <button className="w-full flex items-center justify-start text-left text-white/80 hover:bg-white/10 hover:text-white rounded-2xl h-12 px-4 font-medium transition-all duration-200">
             <Bell className="h-5 w-5 mr-3" />
             Notifications
           </button>
-          <button className="w-full flex items-center justify-start text-left text-white/80 hover:bg-white/10 hover:text-white rounded-lg h-12 px-4 font-medium transition-all duration-200">
+          <button className="w-full flex items-center justify-start text-left text-white/80 hover:bg-white/10 hover:text-white rounded-2xl h-12 px-4 font-medium transition-all duration-200">
             <Settings className="h-5 w-5 mr-3" />
             Settings
           </button>
@@ -220,11 +224,12 @@ function DashboardContent() {
                       setActiveView(key as ActiveView);
                       setShowMobileMenu(false);
                     }}
-                    className={`w-full flex items-center justify-start text-left rounded-lg px-4 py-3 font-medium transition-all duration-200 ${
+                    className={`w-full flex items-center justify-start text-left rounded-2xl px-4 py-3 font-medium transition-all duration-200 ${
                       activeView === key 
-                        ? 'bg-blue-50 text-blue-900 font-medium' 
+                        ? 'text-gray-900 font-semibold shadow-sm' 
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     }`}
+                    style={activeView === key ? { backgroundColor: '#F7D774' } : {}}
                   >
                     <Icon className="h-5 w-5 mr-3" />
                     {label}

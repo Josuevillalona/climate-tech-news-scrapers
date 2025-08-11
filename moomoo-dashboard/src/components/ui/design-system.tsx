@@ -100,6 +100,7 @@ export default function DesignSystem() {
                 <h4 className="font-semibold text-gray-900 mb-2">Moo Yellow (#F7D774)</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>• Primary action buttons</li>
+                  <li>• <strong>Active navigation states</strong></li>
                   <li>• Important highlights</li>
                   <li>• Success indicators</li>
                   <li>• Featured badges</li>
@@ -226,9 +227,9 @@ export default function DesignSystem() {
                     
                     <div className="space-y-2">
                       {['Dashboard', 'Advanced Search', 'History', 'Saved Searches', 'Reports'].map((item, i) => (
-                        <div key={item} className={`p-2 rounded-lg text-sm transition-colors ${
-                          i === 0 ? 'bg-white/20 text-white font-medium' : 'text-white/80 hover:bg-white/10'
-                        }`}>
+                        <div key={item} className={`p-3 rounded-2xl text-sm transition-all duration-200 font-medium ${
+                          i === 0 ? 'text-gray-900 font-semibold shadow-sm' : 'text-white/80 hover:bg-white/10 hover:text-white'
+                        }`} style={i === 0 ? { backgroundColor: '#F7D774' } : {}}>
                           {item}
                         </div>
                       ))}
@@ -243,16 +244,17 @@ export default function DesignSystem() {
               <h3 className="text-lg font-medium text-gray-800">Navigation Elements</h3>
               <div className="space-y-3">
                 <Button 
-                  style={{ backgroundColor: '#69B8E5' }}
-                  className="w-full justify-start text-white hover:opacity-90 rounded-lg px-4 py-2"
+                  style={{ backgroundColor: '#F7D774' }}
+                  className="w-full justify-start text-gray-900 hover:opacity-90 rounded-2xl px-4 py-3 font-semibold shadow-sm"
                 >
                   <TrendingUp className="h-4 w-4 mr-3" />
-                  Dashboard
+                  Dashboard (Active)
                 </Button>
                 
                 <Button 
                   variant="ghost"
-                  className="w-full justify-start text-gray-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg px-4 py-2"
+                  className="w-full justify-start text-white/80 hover:bg-white/10 hover:text-white rounded-2xl px-4 py-3 font-medium transition-all duration-200"
+                  style={{ backgroundColor: 'transparent' }}
                 >
                   <Search className="h-4 w-4 mr-3" />
                   Advanced Search
@@ -260,25 +262,45 @@ export default function DesignSystem() {
                 
                 <Button 
                   variant="ghost"
-                  className="w-full justify-start text-gray-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg px-4 py-2"
+                  className="w-full justify-start text-white/80 hover:bg-white/10 hover:text-white rounded-2xl px-4 py-3 font-medium transition-all duration-200"
+                  style={{ backgroundColor: 'transparent' }}
                 >
                   <Bell className="h-4 w-4 mr-3" />
                   Alerts
                 </Button>
 
-                {/* Blue Badge Example */}
+                {/* Navigation State Examples */}
                 <div className="pt-4">
-                  <p className="text-sm font-medium text-gray-700 mb-2">Navigation Badges</p>
-                  <div className="flex gap-2">
-                    <Badge style={{ backgroundColor: '#69B8E5', color: 'white' }} className="rounded-full px-3 py-1 text-xs">
+                  <p className="text-sm font-medium text-gray-700 mb-3">Navigation States</p>
+                  <div className="space-y-2">
+                    <div className="text-xs text-gray-600">
+                      <strong>Active State:</strong> Yellow background (#F7D774) with dark gray text (Gray 900)
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      <strong>Hover State:</strong> White overlay (white/10) with white text
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      <strong>Normal State:</strong> Semi-transparent white text (white/80)
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 mt-3">
+                    <Badge style={{ backgroundColor: '#F7D774', color: '#111827' }} className="rounded-full px-3 py-1 text-xs font-semibold">
                       Active
                     </Badge>
                     <Badge style={{ 
-                      backgroundColor: 'rgba(105, 184, 229, 0.1)', 
-                      color: '#69B8E5',
-                      borderColor: 'rgba(105, 184, 229, 0.2)'
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+                      color: 'white',
+                      borderColor: 'rgba(255, 255, 255, 0.2)'
                     }} className="border rounded-full px-3 py-1 text-xs">
-                      Navigation
+                      Hover
+                    </Badge>
+                    <Badge style={{ 
+                      backgroundColor: 'transparent', 
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      borderColor: 'rgba(255, 255, 255, 0.3)'
+                    }} className="border rounded-full px-3 py-1 text-xs">
+                      Normal
                     </Badge>
                   </div>
                 </div>
