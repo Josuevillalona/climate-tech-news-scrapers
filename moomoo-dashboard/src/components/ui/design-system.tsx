@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import DashboardBackground from "@/components/ui/dashboard-background";
 import { 
   Search, 
   Bell, 
@@ -469,6 +470,138 @@ export default function DesignSystem() {
               </div>
             </CardContent>
           </Card>
+        </section>
+
+        {/* Dashboard Background */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-semibold text-gray-900">Dashboard Background</h2>
+          
+          <div className="space-y-4">
+            <h3 className="text-xl font-medium text-gray-800">Animated Background Component</h3>
+            <p className="text-gray-600">
+              A sophisticated animated background that creates depth and visual interest while maintaining focus on content.
+            </p>
+            
+            {/* Live Preview */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="relative h-96">
+                <DashboardBackground>
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Card className="w-80 bg-white/90 backdrop-blur-sm shadow-lg">
+                      <CardHeader>
+                        <CardTitle className="text-xl text-gray-900">Sample Dashboard Content</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <DollarSign className="h-5 w-5 text-[#F7D774]" />
+                            <span className="font-medium text-gray-900">$24.5M</span>
+                          </div>
+                          <Badge className="bg-[#2E5E4E] text-white rounded-full px-3 py-1">
+                            Series A
+                          </Badge>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="h-2 bg-gray-200 rounded-full">
+                            <div className="h-2 bg-[#F7D774] rounded-full w-3/4"></div>
+                          </div>
+                          <p className="text-sm text-gray-600">Climate tech funding progress</p>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button size="sm" className="bg-[#F7D774] hover:bg-[#F7D774]/90 text-gray-900 flex-1">
+                            View Details
+                          </Button>
+                          <Button variant="outline" size="sm" className="border-[#2E5E4E] text-[#2E5E4E] hover:bg-[#2E5E4E]/10">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </DashboardBackground>
+              </div>
+              <div className="p-4 bg-gray-50 border-t border-gray-200">
+                <p className="text-sm text-gray-600">
+                  <strong>Interactive Preview:</strong> The background features gentle pulsing elements, floating particles, and subtle drifting animations.
+                </p>
+              </div>
+            </div>
+            
+            {/* Component Code */}
+            <div className="space-y-4">
+              <h4 className="text-lg font-medium text-gray-800">Component Usage</h4>
+              <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                <pre className="text-green-400 text-sm">
+{`import DashboardBackground from '@/components/ui/dashboard-background';
+
+export default function MyDashboard() {
+  return (
+    <DashboardBackground>
+      {/* Your dashboard content here */}
+      <div className="p-8">
+        <h1>My Dashboard</h1>
+        {/* Cards, widgets, etc. */}
+      </div>
+    </DashboardBackground>
+  );
+}`}
+                </pre>
+              </div>
+            </div>
+            
+            {/* Animation Details */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card className="p-4">
+                <h4 className="font-semibold text-gray-900 mb-2">Gentle Pulse</h4>
+                <p className="text-sm text-gray-600 mb-3">
+                  Large background orbs with 6-second breathing animation using brand colors.
+                </p>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-[#F7D774]/30 rounded-full animate-gentle-pulse"></div>
+                  <div className="w-4 h-4 bg-[#2E5E4E]/30 rounded-full animate-gentle-pulse delay-1000"></div>
+                  <div className="w-4 h-4 bg-[#AEE1F6]/30 rounded-full animate-gentle-pulse delay-2000"></div>
+                </div>
+              </Card>
+              
+              <Card className="p-4">
+                <h4 className="font-semibold text-gray-900 mb-2">Float Animation</h4>
+                <p className="text-sm text-gray-600 mb-3">
+                  Small floating elements that rise and fall with 8-second cycles.
+                </p>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-[#F7D774]/40 rounded-full animate-float"></div>
+                  <div className="w-3 h-3 bg-[#2E5E4E]/50 rounded-full animate-float delay-700"></div>
+                  <div className="w-3 h-3 bg-[#AEE1F6]/40 rounded-full animate-float delay-1100"></div>
+                </div>
+              </Card>
+              
+              <Card className="p-4">
+                <h4 className="font-semibold text-gray-900 mb-2">Drift Movement</h4>
+                <p className="text-sm text-gray-600 mb-3">
+                  Subtle horizontal drift with rotation over 12-second periods.
+                </p>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-[#F7D774]/30 rounded-full animate-drift"></div>
+                  <div className="w-3 h-3 bg-[#2E5E4E]/40 rounded-full animate-drift delay-1500"></div>
+                </div>
+              </Card>
+            </div>
+            
+            {/* Design Guidelines */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="font-semibold text-blue-900 mb-2">Design Guidelines</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• Use as a container for main dashboard layouts</li>
+                <li>• Orbs are positioned to avoid sidebar overlap (main content area only)</li>
+                <li>• Background elements are pointer-events-none to avoid interaction conflicts</li>
+                <li>• Colors use low opacity (15-40%) to maintain content readability</li>
+                <li>• Multiple orb sizes create depth: large (40-56px), medium (28-36px), small (12-20px)</li>
+                <li>• Animations are performance-optimized with CSS transforms</li>
+                <li>• Pattern overlay is constrained to main content area (left-64 offset)</li>
+                <li>• Consider reduced motion preferences for accessibility</li>
+              </ul>
+            </div>
+          </div>
         </section>
 
         {/* Status & Feedback */}

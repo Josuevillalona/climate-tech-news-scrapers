@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { fetchDeals } from '@/lib/api';
 import type { FilterState } from '@/contexts/FilterContext';
 import type { FormattedDeal } from '@/lib/supabase';
@@ -36,6 +36,7 @@ const AlertContext = createContext<AlertContextType | undefined>(undefined);
 export function AlertProvider({ children }: { children: ReactNode }) {
   const [presets, setPresets] = useState<AlertPreset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load saved presets from localStorage
   useEffect(() => {
@@ -75,9 +76,9 @@ export function AlertProvider({ children }: { children: ReactNode }) {
   // Check for new matches every 5 minutes for active alerts
   useEffect(() => {
     const checkAlerts = async () => {
-      const activePresets = presets.filter(p => p.isActive);
+      const currentActivePresets = presets.filter(p => p.isActive);
       
-      for (const preset of activePresets) {
+      for (const preset of currentActivePresets) {
         try {
           const matchingDeals = await fetchDeals(100, preset.filters);
           
@@ -88,14 +89,17 @@ export function AlertProvider({ children }: { children: ReactNode }) {
           );
 
           if (newDeals.length > 0) {
-            updatePreset(preset.id, {
-              ...preset,
-              lastChecked: new Date().toISOString(),
-              lastTriggered: new Date().toISOString(),
-              totalMatches: matchingDeals.length,
-              newMatches: newDeals.length,
-              lastMatchedDeals: newDeals.slice(0, 5) // Keep last 5 matches
-            });
+            // Use callback form to avoid stale closure issues
+            setPresets(currentPresets => currentPresets.map(p => 
+              p.id === preset.id ? {
+                ...p,
+                lastChecked: new Date().toISOString(),
+                lastTriggered: new Date().toISOString(),
+                totalMatches: matchingDeals.length,
+                newMatches: newDeals.length,
+                lastMatchedDeals: newDeals.slice(0, 5)
+              } : p
+            ));
 
             // Trigger notification
             if ('Notification' in window && Notification.permission === 'granted') {
@@ -106,11 +110,13 @@ export function AlertProvider({ children }: { children: ReactNode }) {
             }
           } else {
             // Update last checked time even if no new matches
-            updatePreset(preset.id, {
-              ...preset,
-              lastChecked: new Date().toISOString(),
-              totalMatches: matchingDeals.length
-            });
+            setPresets(currentPresets => currentPresets.map(p => 
+              p.id === preset.id ? {
+                ...p,
+                lastChecked: new Date().toISOString(),
+                totalMatches: matchingDeals.length
+              } : p
+            ));
           }
         } catch (error) {
           console.error(`Error checking alert ${preset.name}:`, error);
@@ -118,12 +124,25 @@ export function AlertProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    if (presets.length > 0) {
-      checkAlerts(); // Check immediately
-      const interval = setInterval(checkAlerts, 5 * 60 * 1000); // Then every 5 minutes
-      return () => clearInterval(interval);
+    // Clear existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
-  }, [presets]);
+
+    const activePresets = presets.filter(p => p.isActive);
+    if (activePresets.length > 0 && !isLoading) {
+      checkAlerts(); // Check immediately
+      intervalRef.current = setInterval(checkAlerts, 5 * 60 * 1000); // Then every 5 minutes
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [presets.map(p => `${p.id}-${p.isActive}`).join(','), isLoading]); // Only trigger when active state changes
 
   const createPreset = (name: string, description: string, filters: FilterState): AlertPreset => {
     // Generate mock matched deals for demonstration

@@ -303,12 +303,17 @@ export default function AlertsPanel() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => togglePreset(preset.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    togglePreset(preset.id);
+                  }}
                   className={`text-xs rounded-full p-1 h-7 w-7 ${
                     preset.isActive 
                       ? 'text-[#2E5E4E] hover:bg-[#2E5E4E]/10' 
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
+                  title={preset.isActive ? 'Pause alert' : 'Start alert'}
                 >
                   {preset.isActive ? (
                     <Pause className="h-3 w-3" />
@@ -320,14 +325,20 @@ export default function AlertsPanel() {
                   variant="ghost"
                   size="sm"
                   className="text-xs text-gray-600 hover:text-gray-700 rounded-full p-1 hover:bg-gray-100 h-7 w-7"
+                  title="View details"
                 >
                   <Eye className="h-3 w-3" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => deletePreset(preset.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    deletePreset(preset.id);
+                  }}
                   className="text-xs text-gray-600 hover:text-red-500 rounded-full p-1 hover:bg-red-50 h-7 w-7"
+                  title="Delete alert"
                 >
                   <Trash2 className="h-3 w-3" />
                 </Button>

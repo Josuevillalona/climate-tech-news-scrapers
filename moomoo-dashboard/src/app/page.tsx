@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, TrendingUp, DollarSign, Users, Building2, Settings, Bell, Filter, MoreHorizontal, Loader2, AlertCircle, FileText, BarChart3, Globe } from "lucide-react";
+import DashboardBackground from "@/components/ui/dashboard-background";
+import { Search, TrendingUp, DollarSign, Users, Building2, Settings, Bell, Filter, MoreHorizontal, Loader2, AlertCircle, FileText, BarChart3, Globe, LayoutDashboard } from "lucide-react";
 import { useDeals, useDashboardStats } from "@/hooks/useData";
 import { formatLargeNumber } from "@/lib/utils";
 import { FilterProvider, useFilters } from "@/contexts/FilterContext";
@@ -17,7 +18,7 @@ import CompanySignalsWidget from "@/components/CompanySignalsWidget";
 import ReportGenerationPanel from "@/components/ReportGenerationPanel";
 import FundingTrendsChart from "@/components/charts/FundingTrendsChart";
 
-type ActiveView = 'deals' | 'news' | 'signals' | 'reports';
+type ActiveView = 'dashboard' | 'deals' | 'news' | 'signals' | 'reports' | 'notifications';
 
 // Helper function to parse funding amounts
 function parseFundingAmount(amount: string): number {
@@ -80,7 +81,7 @@ function DashboardContent() {
   const { deals, loading: dealsLoading, error: dealsError } = useDeals(filters);
   const { stats, loading: statsLoading } = useDashboardStats();
   const [showCreateAlert, setShowCreateAlert] = useState(false);
-  const [activeView, setActiveView] = useState<ActiveView>('deals');
+  const [activeView, setActiveView] = useState<ActiveView>('dashboard');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // Calculate quick insights from real deals data
@@ -111,7 +112,8 @@ function DashboardContent() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 flex">
+    <DashboardBackground>
+      <div className="w-full min-h-screen text-gray-900 flex">
       {/* Left Sidebar - Beautiful Blue - Mobile Responsive */}
       <div className="hidden md:flex w-64 flex-col shadow-lg" style={{ backgroundColor: '#69B8E5' }}>
         {/* Logo */}
@@ -126,6 +128,18 @@ function DashboardContent() {
         
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2">
+          <button 
+            onClick={() => setActiveView('dashboard')}
+            className={`w-full flex items-center justify-start text-left rounded-2xl h-12 px-4 font-medium transition-all duration-200 ${
+              activeView === 'dashboard' 
+                ? 'text-gray-900 font-semibold shadow-sm' 
+                : 'text-white/80 hover:bg-white/10 hover:text-white'
+            }`}
+            style={activeView === 'dashboard' ? { backgroundColor: '#F7D774' } : {}}
+          >
+            <LayoutDashboard className="h-5 w-5 mr-3" />
+            Dashboard
+          </button>
           <button 
             onClick={() => setActiveView('deals')}
             className={`w-full flex items-center justify-start text-left rounded-2xl h-12 px-4 font-medium transition-all duration-200 ${
@@ -176,7 +190,15 @@ function DashboardContent() {
           </button>
           
           {/* Additional Navigation Items */}
-          <button className="w-full flex items-center justify-start text-left text-white/80 hover:bg-white/10 hover:text-white rounded-2xl h-12 px-4 font-medium transition-all duration-200">
+          <button 
+            onClick={() => setActiveView('notifications')}
+            className={`w-full flex items-center justify-start text-left rounded-2xl h-12 px-4 font-medium transition-all duration-200 ${
+              activeView === 'notifications' 
+                ? 'text-gray-900 font-semibold shadow-sm' 
+                : 'text-white/80 hover:bg-white/10 hover:text-white'
+            }`}
+            style={activeView === 'notifications' ? { backgroundColor: '#F7D774' } : {}}
+          >
             <Bell className="h-5 w-5 mr-3" />
             Notifications
           </button>
@@ -188,9 +210,9 @@ function DashboardContent() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col bg-gray-50">
+      <div className="flex-1 flex flex-col">
         {/* Mobile Header - Only visible on small screens */}
-        <div className="md:hidden bg-white shadow-sm border-b border-gray-200 px-4 py-4">
+        <div className="md:hidden bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200/60 px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#69B8E5' }}>
@@ -213,10 +235,12 @@ function DashboardContent() {
             <div className="mt-4 pb-4 border-t border-gray-200 pt-4">
               <nav className="space-y-2">
                 {[
+                  { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
                   { key: 'deals', label: 'Deals', icon: DollarSign },
                   { key: 'news', label: 'Climate Tech News', icon: Globe },
                   { key: 'signals', label: 'Company Signals', icon: BarChart3 },
-                  { key: 'reports', label: 'Reports', icon: FileText }
+                  { key: 'reports', label: 'Reports', icon: FileText },
+                  { key: 'notifications', label: 'Notifications', icon: Bell }
                 ].map(({ key, label, icon: Icon }) => (
                   <button
                     key={key}
@@ -241,14 +265,16 @@ function DashboardContent() {
         </div>
 
         {/* Top Header */}
-        <header className="bg-white shadow-sm border-b border-gray-200 px-4 md:px-8 py-6">
+        <header className="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200/60 px-4 md:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 md:space-x-6">
               <h2 className="text-xl md:text-3xl font-bold text-gray-900">
+                {activeView === 'dashboard' && 'Investment Dashboard'}
                 {activeView === 'deals' && 'Recent Funding Rounds'}
                 {activeView === 'news' && 'Climate Tech News Intelligence'}
                 {activeView === 'signals' && 'Company Signals Intelligence'}
                 {activeView === 'reports' && 'Professional Reports'}
+                {activeView === 'notifications' && 'Investment Notifications'}
               </h2>
               <Button variant="outline" size="sm" className="hidden md:flex text-gray-700 border-gray-200 hover:bg-gray-50 rounded-lg px-4 py-2 font-medium">
                 + Add widgets
@@ -268,7 +294,7 @@ function DashboardContent() {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   placeholder="Search Climate Data"
-                  className="pl-12 w-80 bg-white border border-gray-200 text-gray-900 rounded-lg h-12 focus:ring-1 focus:ring-moo-yellow focus:border-moo-yellow shadow-sm"
+                  className="pl-12 w-80 bg-white/90 backdrop-blur-sm border border-gray-200/60 text-gray-900 rounded-lg h-12 focus:ring-1 focus:ring-moo-yellow focus:border-moo-yellow shadow-sm"
                 />
               </div>
               <Button variant="ghost" size="sm" className="hidden md:flex text-gray-600 hover:bg-gray-50 rounded-lg px-4 py-2 font-medium">
@@ -286,36 +312,114 @@ function DashboardContent() {
 
         {/* Main Content */}
         <main className="flex-1 p-4 md:p-8 space-y-6 md:space-y-8 overflow-auto">
-          {/* Welcome Section */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Welcome back, Alex</h2>
-              <p className="text-base md:text-lg text-gray-600">
-                {activeView === 'deals' && "Here's what's happening in climate tech funding today"}
-                {activeView === 'news' && "Stay updated with the latest climate tech intelligence"}
-                {activeView === 'signals' && "Monitor company signals and market movements"}
-                {activeView === 'reports' && "Generate and manage your investment reports"}
-              </p>
-            </div>
-            {activeView === 'deals' && (
-              <div className="flex items-center space-x-4">
-                <Badge variant="success" className="px-4 py-2 rounded-full shadow-sm font-medium">
-                  {deals.filter(d => d.score >= 70).length} High Score
-                </Badge>
-                <Badge variant="warning" className="px-4 py-2 rounded-full shadow-sm font-medium">
-                  {deals.filter(d => d.reviewStatus?.toLowerCase().includes('pending') || d.reviewStatus === 'PENDING_REVIEW').length} Pending Review
-                </Badge>
-              </div>
-            )}
-          </div>
-
-          {/* Deals View */}
-          {activeView === 'deals' && (
+          {/* Dashboard View */}
+          {activeView === 'dashboard' && (
             <>
-              {/* Filter and Alert Panels */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                <FilterPanel onCreateAlert={() => setShowCreateAlert(true)} />
-                <AlertsPanel />
+              {/* Stats Overview */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-200">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                    <CardTitle className="text-sm font-semibold text-gray-900">
+                      Deals
+                    </CardTitle>
+                    <div className="p-2 bg-[#2E5E4E]/10 rounded-xl">
+                      <Building2 className="h-5 w-5 text-[#2E5E4E]" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {statsLoading ? (
+                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
+                    ) : (
+                      <>
+                        <div className="text-4xl font-bold text-gray-900 mb-2">
+                          {stats.totalDeals.toLocaleString()}
+                        </div>
+                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
+                          <TrendingUp className="w-4 h-4 mr-1" />
+                          Processing pipeline
+                        </p>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-200">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                    <CardTitle className="text-sm font-semibold text-gray-900">
+                      Volume
+                    </CardTitle>
+                    <div className="p-2 bg-[#F7D774]/20 rounded-xl">
+                      <DollarSign className="h-5 w-5 text-gray-900" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {statsLoading ? (
+                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
+                    ) : (
+                      <>
+                        <div className="text-4xl font-bold text-gray-900 mb-2">
+                          ${formatLargeNumber(stats.totalFunding)}
+                        </div>
+                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
+                          <TrendingUp className="w-4 h-4 mr-1" />
+                          Total tracked funding
+                        </p>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-200">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                    <CardTitle className="text-sm font-semibold text-gray-900">
+                      Avg. Deal
+                    </CardTitle>
+                    <div className="p-2 bg-[#AEE1F6]/30 rounded-xl">
+                      <TrendingUp className="h-5 w-5 text-[#2E5E4E]" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {statsLoading ? (
+                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
+                    ) : (
+                      <>
+                        <div className="text-4xl font-bold text-gray-900 mb-2">
+                          ${formatLargeNumber(stats.avgDealSize)}
+                        </div>
+                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
+                          <TrendingUp className="w-4 h-4 mr-1" />
+                          Climate tech average
+                        </p>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-200">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                    <CardTitle className="text-sm font-semibold text-gray-900">
+                      Avg Score
+                    </CardTitle>
+                    <div className="p-2 bg-[#F3F3F3] rounded-xl">
+                      <Users className="h-5 w-5 text-gray-700" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {statsLoading ? (
+                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
+                    ) : (
+                      <>
+                        <div className="text-4xl font-bold text-gray-900 mb-2">
+                          {stats.avgScore.toFixed(1)}/10
+                        </div>
+                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
+                          <TrendingUp className="w-4 h-4 mr-1" />
+                          Alex's filter match
+                        </p>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Analytics and Trends */}
@@ -325,7 +429,7 @@ function DashboardContent() {
                 </div>
                 <div className="space-y-6">
                   {/* Quick Insights with Real Data */}
-                  <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
+                  <Card className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-200">
                     <CardHeader className="pb-4">
                       <CardTitle className="text-lg font-semibold text-gray-900">
                         Quick Insights
@@ -364,116 +468,17 @@ function DashboardContent() {
                   </Card>
                 </div>
               </div>
+            </>
+          )}
 
-              {/* Stats Overview */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <CardTitle className="text-sm font-semibold text-gray-900">
-                      Deals
-                    </CardTitle>
-                    <div className="p-2 bg-[#2E5E4E]/10 rounded-xl">
-                      <Building2 className="h-5 w-5 text-[#2E5E4E]" />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {statsLoading ? (
-                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
-                    ) : (
-                      <>
-                        <div className="text-4xl font-bold text-gray-900 mb-2">
-                          {stats.totalDeals.toLocaleString()}
-                        </div>
-                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
-                          <TrendingUp className="w-4 h-4 mr-1" />
-                          Processing pipeline
-                        </p>
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <CardTitle className="text-sm font-semibold text-gray-900">
-                      Volume
-                    </CardTitle>
-                    <div className="p-2 bg-[#F7D774]/20 rounded-xl">
-                      <DollarSign className="h-5 w-5 text-gray-900" />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {statsLoading ? (
-                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
-                    ) : (
-                      <>
-                        <div className="text-4xl font-bold text-gray-900 mb-2">
-                          ${formatLargeNumber(stats.totalFunding)}
-                        </div>
-                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
-                          <TrendingUp className="w-4 h-4 mr-1" />
-                          Total tracked funding
-                        </p>
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <CardTitle className="text-sm font-semibold text-gray-900">
-                      Avg. Deal
-                    </CardTitle>
-                    <div className="p-2 bg-[#AEE1F6]/30 rounded-xl">
-                      <TrendingUp className="h-5 w-5 text-[#2E5E4E]" />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {statsLoading ? (
-                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
-                    ) : (
-                      <>
-                        <div className="text-4xl font-bold text-gray-900 mb-2">
-                          ${formatLargeNumber(stats.avgDealSize)}
-                        </div>
-                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
-                          <TrendingUp className="w-4 h-4 mr-1" />
-                          Climate tech average
-                        </p>
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <CardTitle className="text-sm font-semibold text-gray-900">
-                      Avg Score
-                    </CardTitle>
-                    <div className="p-2 bg-[#F3F3F3] rounded-xl">
-                      <Users className="h-5 w-5 text-gray-700" />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {statsLoading ? (
-                      <Loader2 className="h-8 w-8 animate-spin text-[#2E5E4E]" />
-                    ) : (
-                      <>
-                        <div className="text-4xl font-bold text-gray-900 mb-2">
-                          {stats.avgScore.toFixed(1)}/10
-                        </div>
-                        <p className="text-sm text-[#2E5E4E] flex items-center font-medium">
-                          <TrendingUp className="w-4 h-4 mr-1" />
-                          Alex's filter match
-                        </p>
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
+          {/* Deals View */}
+          {activeView === 'deals' && (
+            <>
+              {/* Filter Panel */}
+              <FilterPanel onCreateAlert={() => setShowCreateAlert(true)} />
 
               {/* Recent Funding Rounds - Main Table */}
-              <Card className="bg-white rounded-xl shadow-sm border border-gray-200">
+              <Card className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/60">
                 <CardHeader className="pb-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
@@ -634,6 +639,13 @@ function DashboardContent() {
           <ReportGenerationPanel />
         </>
       )}
+
+      {/* Notifications View */}
+      {activeView === 'notifications' && (
+        <>
+          <AlertsPanel />
+        </>
+      )}
         </main>
 
         {/* Create Alert Modal */}
@@ -642,7 +654,8 @@ function DashboardContent() {
           onClose={() => setShowCreateAlert(false)} 
         />
       </div>
-    </div>
+      </div>
+    </DashboardBackground>
   );
 }
 

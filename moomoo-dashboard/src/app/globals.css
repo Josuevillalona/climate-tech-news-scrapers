@@ -200,3 +200,57 @@ p {
     transform: translateY(0);
   }
 }
+
+/* Dashboard Background Animations */
+.animate-gentle-pulse {
+  animation: gentlePulse 6s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-drift {
+  animation: drift 12s linear infinite;
+}
+
+@keyframes gentlePulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translateX(0px) rotate(0deg);
+    opacity: 0.3;
+  }
+  33% {
+    transform: translateX(30px) rotate(120deg);
+    opacity: 0.6;
+  }
+  66% {
+    transform: translateX(-20px) rotate(240deg);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateX(0px) rotate(360deg);
+    opacity: 0.3;
+  }
+}
